@@ -24,8 +24,15 @@ from os.path import dirname, join
 
 
 # SETTING PAGE CONFIG TO WIDE MODE
-st.set_page_config(layout="wide")
+st.set_page_config(
+    page_title="NYC Ride Share",
+    layout="wide",
+    page_icon=None,
+    initial_sidebar_state="collapsed",
+)
 
+
+st.sidebar.header('NYC Ride Share')
 
 h1, h2, h3 = st.columns(3)
 h1.title('NYC Ride Share')
