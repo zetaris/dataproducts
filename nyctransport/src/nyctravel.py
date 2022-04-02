@@ -160,8 +160,7 @@ winddelta = '%.1fkph' % (wind - prev_wind)
 col1, col2, col3, col4 = st.columns(4)
 
 col1.metric(label='Temperature', value='%.1f °C' % temp, delta=tempdelta)
-precip_delta_color = 'normal'
-if precipdelta == 0: precip_delta_color = 'off'
+precip_delta_color = 'off' if precipdelta == 0 else 'normal'
 col2.metric(label='Rainfall', value='%.1f mm' % precip, delta=precipdelta, delta_color=precip_delta_color)
 col3.metric(label='Humidity', value='%.1f%%' % humidity, delta=humiditydelta)
 col4.metric(label='Wind Speed', value='%.1f kph' % wind, delta=winddelta)
