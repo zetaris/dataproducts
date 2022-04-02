@@ -2,7 +2,7 @@ from gc import callbacks
 import streamlit as st
 import pandas as pd
 import numpy as np
-import time, datetime
+import datetime
 import plotly.graph_objects as go
 import urllib
 import json
