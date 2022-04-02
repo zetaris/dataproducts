@@ -9,9 +9,8 @@ import json
 # wide page layout
 st.set_page_config(layout="wide")
 
-# get API key from file
-with open('vc_key.txt') as f:
-    VC_KEY = f.read().strip()
+# Weather API key
+VC_KEY = st.secrets['vc_api_key']
 
 h1, h2, h3 = st.columns(3)
 h1.title('NYC Travel Portal')
