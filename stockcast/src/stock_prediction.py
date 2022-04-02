@@ -11,14 +11,14 @@ import pandas as pd
 
 # can only be called once per app, and must be called as the first Streamlit command
 st.set_page_config(
-    page_title="Stock Price Forecast App",
+    page_title="Stock Price Forecast",
     layout="wide",
     page_icon=None,
     initial_sidebar_state="collapsed",
 )
 
 h1, h2, h3 = st.columns(3)
-h1.title('Stock Price Forecast App')
+h1.title('Stock Price Forecast')
 h1.write('Data Product powered by Zetaris Data Mesh')
 h3.image('https://www.zetaris.com/hs-fs/hubfs/Zetaris-3D---FINAL-V2.png?width=300&name=Zetaris-3D---FINAL-V2.png')
 
