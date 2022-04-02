@@ -69,7 +69,7 @@ m1, m2 = st.columns(2)
 # travel delay indictor
 m1.header('Travel Delay Indicator')
 # gauge percentage of delayed trips
-delay = random.choice(range(0, 100))
+delay = random.choice(range(0, 101))
 #m2.write(gauge(labels=['Low', 'Medium', 'High'], arrow=delay))
 
 fig = go.Figure(go.Indicator(
@@ -159,11 +159,12 @@ winddelta = '%.1fkph' % (wind - prev_wind)
 # create three columns
 col1, col2, col3, col4 = st.columns(4)
 
-col1.metric(label='Temperature', value='%s °C' % temp, delta=tempdelta)
-# if precip_delta == 0: precip_delta_color = 'off'
-col2.metric(label='Rainfall', value='%s mm' % precip, delta=precipdelta)
-col3.metric(label='Humidity', value='%s%%' % humidity, delta=humiditydelta)
-col4.metric(label='Wind Speed', value='%s kph' % wind, delta=winddelta)
+col1.metric(label='Temperature', value='%.1f °C' % temp, delta=tempdelta)
+precip_delta_color = 'normal'
+if precipdelta == 0: precip_delta_color = 'off'
+col2.metric(label='Rainfall', value='%.1f mm' % precip, delta=precipdelta, delta_color=precip_delta_color)
+col3.metric(label='Humidity', value='%.1f%%' % humidity, delta=humiditydelta)
+col4.metric(label='Wind Speed', value='%.1f kph' % wind, delta=winddelta)
 
 
 # plot hourly temp, precip, and humidity
