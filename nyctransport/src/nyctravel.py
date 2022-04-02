@@ -204,7 +204,7 @@ jfk = [40.6650, -73.7821]
 newark = [40.7090, -74.1805]
 zoom_level = 12
 
-st.header('Traffic')
+st.header('Collisions')
 st.write('NYC police reported motor vehicle collisions')
 # plot map points
 df = pd.DataFrame(
