@@ -8,11 +8,12 @@ from fbprophet.plot import plot_plotly
 from plotly import graph_objs as go
 import pandas as pd
 
+
 # can only be called once per app, and must be called as the first Streamlit command
 st.set_page_config(
     page_title="Stock Price Forecast App",
+    layout="wide",
     page_icon=None,
-    layout="centered",
     initial_sidebar_state="collapsed",
 )
 
@@ -25,8 +26,6 @@ h3.image('https://www.zetaris.com/hs-fs/hubfs/Zetaris-3D---FINAL-V2.png?width=30
 START = "2015-01-01"
 TODAY = date.today().strftime("%Y-%m-%d")
 CWD = dirname(__file__) # /app/stockcast/src
-# main title
-st.title('Stock Price Forecast App')
 st.subheader('')
 
 # increase sidebar width
