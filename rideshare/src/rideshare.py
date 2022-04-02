@@ -26,8 +26,8 @@ st.set_page_config(layout="wide")
 
 
 h1, h2, h3 = st.columns(3)
-h1.title('NYC Ride Share Portal')
-h1.write('A Data Product powered by Zetaris Data Mesh')
+h1.title('NYC Ride Share')
+h1.write('Data Product powered by Zetaris Data Mesh')
 h3.image('https://www.zetaris.com/hs-fs/hubfs/Zetaris-3D---FINAL-V2.png?width=300&name=Zetaris-3D---FINAL-V2.png')
 
 
@@ -35,7 +35,7 @@ h3.image('https://www.zetaris.com/hs-fs/hubfs/Zetaris-3D---FINAL-V2.png?width=30
 @st.experimental_singleton
 def load_data():
     data = pd.read_csv(
-        "../data/uber-raw-data-sep14.csv.gz",
+        "/data/uber-raw-data-sep14.csv.gz",
         nrows=100000,  # approx. 10% of data
         names=[
             "date/time",
