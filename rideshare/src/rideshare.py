@@ -20,6 +20,8 @@ import pandas as pd
 import numpy as np
 import altair as alt
 import pydeck as pdk
+from os.path import dirname, join
+
 
 # SETTING PAGE CONFIG TO WIDE MODE
 st.set_page_config(layout="wide")
@@ -32,10 +34,11 @@ h3.image('https://www.zetaris.com/hs-fs/hubfs/Zetaris-3D---FINAL-V2.png?width=30
 
 
 # LOAD DATA ONCE
+CWD = dirname(__file__)
 @st.experimental_singleton
 def load_data():
     data = pd.read_csv(
-        "/data/uber-raw-data-sep14.csv.gz",
+        join(CWD, "../data/uber-raw-data-sep14.csv.gz"), 
         nrows=100000,  # approx. 10% of data
         names=[
             "date/time",
