@@ -7,12 +7,18 @@ import plotly.graph_objects as go
 import urllib
 import json
 import random
+from os.path import dirname, join
+
+
 
 # wide page layout
 st.set_page_config(layout="wide")
 
 # Weather API key
 VC_KEY = st.secrets['vc_api_key']
+
+# cwd
+CWD = dirname(__file__)
 
 h1, h2, h3 = st.columns(3)
 h1.title('NYC Travel Portal')
@@ -219,6 +225,6 @@ st.header('Collisions')
 st.write('NYC police reported motor vehicle collisions between %s and %s' % (prev_hour_str, slider_hour_str))
 # plot map points
 # 
-df = pd.read_csv('../data/nyc_collisions_2022_jan_feb.csv')
+df = pd.read_csv(join(CWD, '../data/nyc_collisions_2022_jan_feb.csv'))
 st.map(df[df.hour==slider_hour][['latitude', 'longitude']])
 
