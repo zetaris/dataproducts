@@ -3,10 +3,11 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import datetime
+import altair as alt
 import plotly.graph_objects as go
 import urllib
 import json
-import random
+
 
 # wide page layout
 st.set_page_config(layout="wide")
@@ -39,17 +40,25 @@ if slider_hour == 0:
 else:
     prev_hour_str = "%02d:00:00" % (slider_hour - 1)
 
+
+# hourly delay percentage by pudo zone and weather conditions
+#pudo = pd.read_csv('/app/nyctravel/data/airport_hour_delay_percentage.tsv', sep='\t')
+pudo = pd.read_csv('../data/airport_hour_delay_percentage.tsv', sep='\t')
+puzones = pudo.zone_pickup.unique()
+dozones = pudo.zone_dropoff.unique()
+
+
 # add slider_hour to date hours
 date_hour = pd.to_datetime(date) + pd.Timedelta(hours=slider_hour)
 # write timestamp to sidebar
 st.write('**%s**' % date_hour.strftime("%H:%M %A, %B %d, %Y"))
 # pickup zones
-puzone = st.sidebar.selectbox('Pickup Zone', ['Downtown', 'Uptown', 'Midtown', 'Far East', 'Far West'])
+puzone = st.sidebar.selectbox('Pickup Zone', puzones)
 
 # dropdown menu
-airport_list = ['John F. Kennedy (JFK)', 'LaGuardia (LGA)', 'Newark (EWR)']
+#airport_list = ['John F. Kennedy (JFK)', 'LaGuardia (LGA)', 'Newark (EWR)']
 # airport selection from dropdown menu
-airport = st.sidebar.selectbox('Airport', airport_list)
+dozone = st.sidebar.selectbox('Airport', dozones)
 
 @st.cache
 def get_weather(date=None):
@@ -64,12 +73,24 @@ def get_weather(date=None):
     return day, hours
 
 
+# weather metrics
+day, hours = get_weather(date)
+# conditions
+conditions = day.get('conditions')
+# hourly weather df
+hrs = pd.DataFrame(hours)
+
+
 m1, m2 = st.columns(2)
 
 # travel delay indictor
 m1.header('Travel Delay Indicator')
+
+# overall delay-hour-condition model
+dhc = pd.read_csv('../data/airport_hour_conditions_delay.tsv', sep='\t')
+
 # gauge percentage of delayed trips
-delay = random.choice(range(0, 101))
+delay = dhc[(dhc.conditions==conditions) & (dhc.hour==slider_hour)].delay_indicator.values[0]
 #m2.write(gauge(labels=['Low', 'Medium', 'High'], arrow=delay))
 
 fig = go.Figure(go.Indicator(
@@ -120,14 +141,7 @@ fig.update_layout(
 m1.write(fig)
 
 
-
-# weather metrics
 m2.header("Weather Forecast")
-day, hours = get_weather(date)
-# hourly weather df
-hrs = pd.DataFrame(hours)
-
-
 # obtain weather for slider_hour_str
 hour = hrs[hrs['datetime']==slider_hour_str]
 temp = hour.temp.values[0]
@@ -188,14 +202,27 @@ x2.line_chart(hrs['windspeed'], height=200)
 
 # delay prediction
 st.header("Travel Delay Prediction")
-st.write('Likelihood of delay from %s to %s' % (puzone, airport))
+st.write('Likelihood of delay from %s to %s' % (puzone, dozone))
 # hourly probability of delay
-hrs['delay'] = [13.88744589, 15.11280239, 10.2020454 ,  9.03790087,  7.64281398,
-        5.88871278,  7.06624028,  8.81446728, 10.74875574, 10.19265685,
-        9.78954048,  9.36287642,  9.684458  , 10.35649996, 11.7883561 ,
-       13.66204771, 14.51793124, 15.46380269, 14.49042022, 11.69195251,
-       12.63465126, 11.93111295, 13.74051771, 16.67041873]
-st.bar_chart(hrs['delay'], height=400)
+
+# pudo delay values for given puzone, dozone, conditions, and hour
+delays = pudo[(pudo.zone_pickup==puzone) & (pudo.zone_dropoff==dozone) & (pudo.conditions==day.get('conditions'))]
+
+# altair chart hourly delays histogram
+chart = alt.Chart(delays).mark_bar(size=40).encode(
+    x=alt.X('hour', scale=alt.Scale(domain=[0, 23])),
+    y=alt.Y('trip_delay', scale=alt.Scale(domain=[0, 1])),
+    #color=alt.Color('trip_delay', scale=alt.Scale(scheme='blues'))
+)
+
+text = alt.Chart(delays).mark_text(dx=0, dy=20, color='black').encode(
+    x=alt.X('hour', scale=alt.Scale(domain=[0, 23])),
+    y=alt.Y('trip_delay', scale=alt.Scale(domain=[0, 1])),
+    detail='trip_delay',
+    text=alt.Text('trip_delay', format='.1f')
+)
+
+st.altair_chart(chart + text, use_container_width=True)
 
 
 # airport locations
@@ -211,4 +238,3 @@ df = pd.DataFrame(
      np.random.randn(1000, 2) / [30, 30] + [40.740610, -73.995242], columns=['lat', 'lon'])
 
 st.map(df)
-
