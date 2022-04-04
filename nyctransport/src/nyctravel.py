@@ -66,11 +66,20 @@ def get_weather(date=None):
 
 m1, m2 = st.columns(2)
 
-# travel delay indictor
+# temp travel delay indictor
 m1.header('Travel Delay Indicator')
 # gauge percentage of delayed trips
-delay = random.choice(range(0, 101))
-#m2.write(gauge(labels=['Low', 'Medium', 'High'], arrow=delay))
+if slider_hour < 5:
+    delay = random.choice(range(0, 20))
+elif slider_hour < 10:
+    delay = random.choice(range(30, 60))
+elif slider_hour < 15:
+    delay = random.choice(range(20, 40))
+elif slider_hour < 20:
+    delay = random.choice(range(40, 90))
+else:
+    delay = random.choice(range(0, 20))
+
 
 fig = go.Figure(go.Indicator(
     mode = "gauge+number",
@@ -190,11 +199,13 @@ x2.line_chart(hrs['windspeed'], height=200)
 st.header("Travel Delay Prediction")
 st.write('Likelihood of delay from %s to %s' % (puzone, airport))
 # hourly probability of delay
-hrs['delay'] = [13.88744589, 15.11280239, 10.2020454 ,  9.03790087,  7.64281398,
-        5.88871278,  7.06624028,  8.81446728, 10.74875574, 10.19265685,
-        9.78954048,  9.36287642,  9.684458  , 10.35649996, 11.7883561 ,
-       13.66204771, 14.51793124, 15.46380269, 14.49042022, 11.69195251,
+hrs['delay'] = [1.88744589, 5.11280239, 10.2020454 ,  9.03790087,  7.64281398,
+        15.88871278,  27.06624028,  48.81446728, 60.74875574, 70.19265685,
+        65.78954048,  34.36287642,  22.684458  , 15.35649996, 41.7883561 ,
+       58.66204771, 74.51793124, 85.46380269, 54.49042022, 31.69195251,
        12.63465126, 11.93111295, 13.74051771, 16.67041873]
+# add random noise to delay
+hrs['delay'] = hrs['delay'] + np.random.normal(0, slider_hour, len(hrs))
 st.bar_chart(hrs['delay'], height=400)
 
 
@@ -205,10 +216,9 @@ newark = [40.7090, -74.1805]
 zoom_level = 12
 
 st.header('Collisions')
-st.write('NYC police reported motor vehicle collisions')
+st.write('NYC police reported motor vehicle collisions between %s and %s' % (prev_hour_str, slider_hour_str))
 # plot map points
-df = pd.DataFrame(
-     np.random.randn(1000, 2) / [30, 30] + [40.740610, -73.995242], columns=['lat', 'lon'])
-
-st.map(df)
+# 
+df = pd.read_csv('../data/nyc_collisions_2022_jan_feb.csv')
+st.map(df[df.hour==slider_hour][['latitude', 'longitude']])
 
