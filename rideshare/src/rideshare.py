@@ -22,10 +22,11 @@ st.set_page_config(
 
 
 st.sidebar.header('NYC Ride Share')
-st.sidebar.subheader('Description')
-st.sidebar.write('Ride share pickups over time in New York City and its major regional airports.')
 st.sidebar.write('')
 st.sidebar.subheader('Data Card')
+st.sidebar.write('')
+st.sidebar.subheader('Description')
+st.sidebar.write('Ride share pickups over time in New York City and its major regional airports.')
 st.sidebar.write('')
 st.sidebar.subheader('Data Owner')
 st.sidebar.write('')
