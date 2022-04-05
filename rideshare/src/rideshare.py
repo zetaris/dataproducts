@@ -17,11 +17,25 @@ st.set_page_config(
     page_title="NYC Ride Share",
     layout="wide",
     page_icon=None,
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="expanded",
 )
 
 
 st.sidebar.header('NYC Ride Share')
+st.subheader('Description')
+st.sidebar('Ride share pickups over time in New York City and its major regional airports.')
+st.write('')
+st.subheader('Data Card')
+st.write('')
+st.subheader('Data Owner')
+st.write('')
+st.subheader('Domain')
+st.write('')
+st.subheader('Data Source')
+st.write('')
+st.subheader('Data Access')
+st.write('')
+
 
 h1, h2, h3 = st.columns(3)
 h1.title('NYC Ride Share')
