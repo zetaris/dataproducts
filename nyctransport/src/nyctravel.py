@@ -75,10 +75,10 @@ m1, m2 = st.columns(2)
 # temp travel delay indictor
 m1.header('Travel Delay Indicator')
 # gauge percentage of delayed trips
-if slider_hour < 5:
+if slider_hour <= 5:
     delay = random.choice(range(0, 20))
 elif slider_hour < 10:
-    delay = random.choice(range(30, 60))
+    delay = random.choice(range(40, 70))
 elif slider_hour < 15:
     delay = random.choice(range(20, 40))
 elif slider_hour < 20:
@@ -210,8 +210,8 @@ hrs['delay'] = [1.88744589, 5.11280239, 10.2020454 ,  9.03790087,  7.64281398,
         65.78954048,  34.36287642,  22.684458  , 15.35649996, 41.7883561 ,
        58.66204771, 74.51793124, 85.46380269, 54.49042022, 31.69195251,
        12.63465126, 11.93111295, 13.74051771, 16.67041873]
-# add random noise to delay
-hrs['delay'] = hrs['delay'] + np.random.normal(0, slider_hour, len(hrs))
+# add positive random noise to delay
+hrs['delay'] = hrs['delay'] + np.abs(np.random.normal(0, slider_hour, len(hrs)))
 st.bar_chart(hrs['delay'], height=400)
 
 
