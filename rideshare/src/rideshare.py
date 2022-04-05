@@ -17,7 +17,7 @@ st.set_page_config(
     page_title="NYC Ride Share",
     layout="wide",
     page_icon=None,
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 
