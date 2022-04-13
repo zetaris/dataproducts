@@ -67,7 +67,7 @@ with st.sidebar:
         menu_title = 'Data Card',
         options = ['Description', 'Data Owner', 'Domain', 'Data Sources', 'Data Access'],
         icons = ['journal-text', 'person', 'diagram-3', 'boxes', 'code-slash'],
-        #default_index=None,
+        default_index=0,
         menu_icon='card-heading',
         #orientation="horizontal",
         styles={
@@ -80,7 +80,7 @@ with st.sidebar:
     if menu == 'Description':
         smenu = stom.option_menu(
             menu_title='Description',
-            options=['This data product provides a visual representation of NYC travel times and predicted delays for a given date and hour of the day.'],
+            options=['This data product provides a visual representation of NYC travel times, predicted delays, weather, and collisions for a given date and hour of the day.'],
             default_index=-1,
             menu_icon='journal-text',
             styles={
