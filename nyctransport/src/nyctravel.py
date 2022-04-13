@@ -13,7 +13,7 @@ from os.path import dirname, join
 
 
 # wide page layout
-st.set_page_config(page_title='NYC Travel', layout="wide", page_icon='z_favicon.png')
+st.set_page_config(page_title='NYC Travel', layout="wide", page_icon='z_favicon.jpeg')
 
 # Weather API key
 VC_KEY = st.secrets['vc_api_key']
