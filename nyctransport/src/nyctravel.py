@@ -1,5 +1,6 @@
 from gc import callbacks
 import streamlit as st
+import streamlit_option_menu as stom
 import pandas as pd
 import numpy as np
 import datetime
@@ -12,7 +13,7 @@ from os.path import dirname, join
 
 
 # wide page layout
-st.set_page_config(page_title='NYC Travel', layout="wide")
+st.set_page_config(page_title='NYC Travel', layout="wide", page_icon='favicon.ico')
 
 # Weather API key
 VC_KEY = st.secrets['vc_api_key']
@@ -56,6 +57,21 @@ puzone = st.sidebar.selectbox('Pickup Zone', ['Downtown', 'Uptown', 'Midtown', '
 airport_list = ['John F. Kennedy (JFK)', 'LaGuardia (LGA)', 'Newark (EWR)']
 # airport selection from dropdown menu
 airport = st.sidebar.selectbox('Airport', airport_list)
+
+
+# data card
+with st.sidebar:
+    menu = stom.option_menu(
+        menu_title='Data Card',
+        options=['Description', 'Data Owner', 'Domain', 'Data Source', 'Data Access'],
+        default_index=0,
+        menu_icon='card-heading',
+        styles={
+            "nav-link-selected": {"background-color": "#27a7d2"},
+            "icon": {"color": "#27a7d2", "font-size": "25px"}
+        }
+        )
+
 
 @st.cache
 def get_weather(date=None):
