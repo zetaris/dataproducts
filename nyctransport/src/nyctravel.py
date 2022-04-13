@@ -67,7 +67,7 @@ with st.sidebar:
         menu_title = 'Data Card',
         options = ['Description', 'Data Owner', 'Domain', 'Data Sources', 'Data Access'],
         icons = ['journal-text', 'person', 'diagram-3', 'boxes', 'code-slash'],
-        default_index=-1,
+        #default_index=None,
         menu_icon='card-heading',
         #orientation="horizontal",
         styles={
@@ -83,6 +83,30 @@ with st.sidebar:
             options=['This data product provides a visual representation of NYC travel times and predicted delays for a given date and hour of the day.'],
             default_index=-1,
             menu_icon='journal-text',
+            styles={
+                "nav-link" : {"--hover-color": "#27a7d2"},
+                "nav-link-selected": {"background-color": "#27a7d2"},
+                "icon": {"color": "#27a7d2"}
+            }
+        )
+    elif menu == 'Data Owner':
+        smenu = stom.option_menu(
+            menu_title='Data Owner',
+            options=['Data Mesh Demos'],
+            default_index=-1,
+            menu_icon='person',
+            styles={
+                "nav-link" : {"--hover-color": "#27a7d2"},
+                "nav-link-selected": {"background-color": "#27a7d2"},
+                "icon": {"color": "#27a7d2"}
+            }
+        )
+    elif menu == 'Domain':
+        smenu = stom.option_menu(
+            menu_title='Data Owner',
+            options=['NYC Travel'],
+            default_index=-1,
+            menu_icon='diagram-3',
             styles={
                 "nav-link" : {"--hover-color": "#27a7d2"},
                 "nav-link-selected": {"background-color": "#27a7d2"},
@@ -113,6 +137,8 @@ with st.sidebar:
                 "icon": {"color": "#27a7d2"}
             }
         )
+    else:
+        pass
 
 
 @st.cache
