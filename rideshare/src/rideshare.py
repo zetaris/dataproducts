@@ -5,6 +5,7 @@
 """An example of mapping geographic data."""
 
 import streamlit as st
+import streamlit_option_menu as stom
 import pandas as pd
 import numpy as np
 import altair as alt
@@ -23,7 +24,20 @@ st.set_page_config(
 
 st.sidebar.header('NYC Ride Share')
 st.sidebar.write('')
+
+# stom menu
 st.sidebar.subheader('Data Card')
+city = stom.option_menu(
+    label='Menu',
+    options=['Description', 'Data Owner', 'Domain', 'Data Source', 'Data Access'],
+    default='Description',
+    width=200,
+    height=50,
+    )
+
+
+
+""" st.sidebar.subheader('Data Card')
 st.sidebar.write('')
 st.sidebar.subheader('Description')
 st.sidebar.write('Ride share pickups over time in New York City and its major regional airports.')
@@ -35,7 +49,7 @@ st.sidebar.write('')
 st.sidebar.subheader('Data Source')
 st.sidebar.write('')
 st.sidebar.subheader('Data Access')
-st.sidebar.write('')
+st.sidebar.write('') """
 
 
 h1, h2, h3 = st.columns(3)
