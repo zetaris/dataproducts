@@ -26,30 +26,32 @@ st.sidebar.header('NYC Ride Share')
 st.sidebar.write('')
 
 # stom menu
-st.sidebar.subheader('Data Card')
 with st.sidebar:
     menu = stom.option_menu(
-        menu_title='Menu',
+        menu_title='Data Card',
         options=['Description', 'Data Owner', 'Domain', 'Data Source', 'Data Access'],
         default_index=0,
-        menu_icon='card-heading'
+        menu_icon='card-heading',
+        styles={
+            "nav-link-selected": {"baclgroundColor": "blue"},
+        }
         )
 
 
 
-""" st.sidebar.subheader('Data Card')
-st.sidebar.write('')
-st.sidebar.subheader('Description')
-st.sidebar.write('Ride share pickups over time in New York City and its major regional airports.')
-st.sidebar.write('')
-st.sidebar.subheader('Data Owner')
-st.sidebar.write('')
-st.sidebar.subheader('Domain')
-st.sidebar.write('')
-st.sidebar.subheader('Data Source')
-st.sidebar.write('')
-st.sidebar.subheader('Data Access')
-st.sidebar.write('') """
+#st.sidebar.subheader('Data Card')
+#st.sidebar.write('')
+#st.sidebar.subheader('Description')
+#st.sidebar.write('Ride share pickups over time in New York City and its major regional airports.')
+#st.sidebar.write('')
+#st.sidebar.subheader('Data Owner')
+#st.sidebar.write('')
+#st.sidebar.subheader('Domain')
+#st.sidebar.write('')
+#st.sidebar.subheader('Data Source')
+#st.sidebar.write('')
+#st.sidebar.subheader('Data Access')
+#st.sidebar.write('')
 
 
 h1, h2, h3 = st.columns(3)
