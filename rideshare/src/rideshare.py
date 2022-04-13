@@ -33,7 +33,7 @@ with st.sidebar:
         default_index=0,
         menu_icon='card-heading',
         styles={
-            "nav-link-selected": {"baclgroundColor": "blue"},
+            "nav-link-selected": {"baclgroundColor": "#27a7d2"},
         }
         )
 
