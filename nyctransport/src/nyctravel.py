@@ -59,6 +59,8 @@ airport_list = ['John F. Kennedy (JFK)', 'LaGuardia (LGA)', 'Newark (EWR)']
 airport = st.sidebar.selectbox('Airport', airport_list)
 
 
+st.sidebar.write('')
+st.sidebar.write('')
 # data card
 with st.sidebar:
     menu = stom.option_menu(
@@ -68,7 +70,7 @@ with st.sidebar:
         menu_icon='card-heading',
         styles={
             "nav-link-selected": {"background-color": "#27a7d2"},
-            "icon": {"color": "#27a7d2", "font-size": "25px"}
+            "icon": {"color": "#27a7d2"}
         }
         )
 
