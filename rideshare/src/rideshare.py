@@ -17,7 +17,7 @@ from os.path import dirname, join
 st.set_page_config(
     page_title="NYC Ride Share",
     layout="wide",
-    page_icon=None,
+    page_icon='favicon.ico',
     initial_sidebar_state="collapsed",
 )
 
@@ -34,6 +34,7 @@ with st.sidebar:
         menu_icon='card-heading',
         styles={
             "nav-link-selected": {"background-color": "#27a7d2"},
+            "icon": {"color": "#27a7d2", "font-size": "25px"}
         }
         )
 
