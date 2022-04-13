@@ -13,7 +13,8 @@ import pandas as pd
 st.set_page_config(
     page_title="Stock Price Forecast",
     layout="wide",
-    page_icon='z_favicon.png',
+    #page_icon='z_favicon.png',
+    page_icon='chart_with_upwards_trend',
     initial_sidebar_state="collapsed",
 )
 
