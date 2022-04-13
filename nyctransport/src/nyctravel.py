@@ -64,14 +64,54 @@ st.sidebar.write('')
 # data card
 with st.sidebar:
     menu = stom.option_menu(
-        menu_title='Data Card',
-        options=['Description', 'Data Owner', 'Domain', 'Data Source', 'Data Access'],
-        default_index=0,
+        menu_title = 'Data Card',
+        options = ['Description', 'Data Owner', 'Domain', 'Data Sources', 'Data Access'],
+        icons = ['journal-text', 'person', 'diagram-3', 'boxes', 'code-slash'],
+        default_index=-1,
         menu_icon='card-heading',
+        #orientation="horizontal",
         styles={
+            "nav-link" : {"--hover-color": "#27a7d2"},
             "nav-link-selected": {"background-color": "#27a7d2"},
             "icon": {"color": "#27a7d2"}
         }
+    )
+
+    if menu == 'Description':
+        smenu = stom.option_menu(
+            menu_title='Description',
+            options=['This data product provides a visual representation of NYC travel times and predicted delays for a given date and hour of the day.'],
+            default_index=-1,
+            menu_icon='journal-text',
+            styles={
+                "nav-link" : {"--hover-color": "#27a7d2"},
+                "nav-link-selected": {"background-color": "#27a7d2"},
+                "icon": {"color": "#27a7d2"}
+            }
+        )
+    elif menu == 'Data Sources':
+        smenu = stom.option_menu(
+            menu_title='Data Sources',
+            options=['NYC Open Data Portal', 'NYC Taxi Trips', 'Visual Crossing Weather'],
+            default_index=-1,
+            menu_icon='boxes',
+            styles={
+                "nav-link" : {"--hover-color": "#27a7d2"},
+                "nav-link-selected": {"background-color": "#27a7d2"},
+                "icon": {"color": "#27a7d2"}
+            }
+        )
+    elif menu == 'Data Access':
+        smenu = stom.option_menu(
+            menu_title='Data Access',
+            options=['NYC Open Data Portal', 'NYC Taxi Trips', 'Visual Crossing Weather'],
+            default_index=-1,
+            menu_icon='code-slash',
+            styles={
+                "nav-link" : {"--hover-color": "#27a7d2"},
+                "nav-link-selected": {"background-color": "#27a7d2"},
+                "icon": {"color": "#27a7d2"}
+            }
         )
 
 
