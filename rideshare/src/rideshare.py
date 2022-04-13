@@ -27,13 +27,13 @@ st.sidebar.write('')
 
 # stom menu
 st.sidebar.subheader('Data Card')
-city = stom.option_menu(
-    label='Menu',
-    options=['Description', 'Data Owner', 'Domain', 'Data Source', 'Data Access'],
-    default='Description',
-    width=200,
-    height=50,
-    )
+with st.sidebar:
+    menu = stom.option_menu(
+        menu_title='Menu',
+        options=['Description', 'Data Owner', 'Domain', 'Data Source', 'Data Access'],
+        default_index=0,
+        menu_icon='card-heading'
+        )
 
 
 
