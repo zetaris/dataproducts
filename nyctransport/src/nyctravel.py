@@ -9,13 +9,11 @@ import urllib
 import json
 import random
 from os.path import dirname, join
-from PIL import Image
 
 
 
 # wide page layout
-im = Image.open("favicon.ico")
-st.set_page_config(page_title='NYC Travel', layout="wide", page_icon=im)
+st.set_page_config(page_title='NYC Travel', layout="wide", page_icon=st.image('favicon.ico'))
 
 # Weather API key
 VC_KEY = st.secrets['vc_api_key']
