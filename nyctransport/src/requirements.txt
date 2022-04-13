@@ -1,2 +1,2 @@
 plotly
-streamlit_option_menu
+streamlit-option-menu
