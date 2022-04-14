@@ -153,6 +153,12 @@ def get_weather(date=None):
     hours = day.get('hours')
     return day, hours
 
+# weather metrics
+day, hours = get_weather(date)
+# conditions
+conditions = day.get('conditions')
+# hourly weather df
+hrs = pd.DataFrame(hours)
 
 m1, m2 = st.columns(2)
 
@@ -162,7 +168,7 @@ m1.header('Travel Delay Indicator')
 # overall delay-hour-condition model
 dhc = pd.read_csv(join(CWD, '../data/airport_hour_conditions_delay.tsv'), sep='\t')
 
-st.write(dhc.head())
+#st.write(dhc.head())
 
 # gauge percentage of delayed trips
 delay = dhc[(dhc.conditions==conditions) & (dhc.hour==slider_hour)].delay_indicator.values[0]
@@ -214,14 +220,6 @@ fig.update_layout(
         )
 )
 m1.write(fig)
-
-
-
-# weather metrics
-m2.header("Weather Forecast")
-day, hours = get_weather(date)
-# hourly weather df
-hrs = pd.DataFrame(hours)
 
 
 # obtain weather for slider_hour_str
