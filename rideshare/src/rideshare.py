@@ -30,14 +30,28 @@ with st.sidebar:
     menu = stom.option_menu(
         menu_title='Data Card',
         options=['Description', 'Data Owner', 'Domain', 'Data Source', 'Data Access'],
+        icons = ['journal-text', 'person', 'diagram-3', 'boxes', 'code-slash'],
         default_index=0,
         menu_icon='card-heading',
         styles={
+            "nav-link" : {"--hover-color": "#27a7d2"},
             "nav-link-selected": {"background-color": "#27a7d2"},
-            "icon": {"color": "#27a7d2", "font-size": "25px"}
+            "icon": {"color": "#27a7d2"}
         }
-        )
+    )
 
+    if menu == 'Description':
+        smenu = stom.option_menu(
+            menu_title='Description',
+            options=['This data product provides a visual representation of NYC trip pick-ups and drop-offs for a given date and hour of the day.'],
+            default_index=-1,
+            menu_icon='journal-text',
+            styles={
+                "nav-link" : {"--hover-color": "#27a7d2"},
+                "nav-link-selected": {"background-color": "#27a7d2"},
+                "icon": {"color": "#27a7d2"}
+            }
+        )
 
 
 #st.sidebar.subheader('Data Card')
