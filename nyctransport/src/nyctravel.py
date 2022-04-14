@@ -162,6 +162,8 @@ m1.header('Travel Delay Indicator')
 # overall delay-hour-condition model
 dhc = pd.read_csv(join(CWD, '../data/airport_hour_conditions_delay.tsv'), sep='\t')
 
+st.write(dhc.head())
+
 # gauge percentage of delayed trips
 delay = dhc[(dhc.conditions==conditions) & (dhc.hour==slider_hour)].delay_indicator.values[0]
 
