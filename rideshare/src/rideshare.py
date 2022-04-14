@@ -43,7 +43,7 @@ with st.sidebar:
     if menu == 'Description':
         smenu = stom.option_menu(
             menu_title='Description',
-            options=['This data product provides a visual representation of NYC trip pick-ups and drop-offs for a given date and hour of the day.'],
+            options=['This data product provides a visual representation of NYC trip pick-ups and drop-offs for a given hour of the day.'],
             default_index=-1,
             menu_icon='journal-text',
             styles={
