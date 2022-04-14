@@ -156,19 +156,14 @@ def get_weather(date=None):
 
 m1, m2 = st.columns(2)
 
-# temp travel delay indictor
+# travel delay indictor
 m1.header('Travel Delay Indicator')
+
+# overall delay-hour-condition model
+dhc = pd.read_csv(join(CWD, '../data/airport_hour_conditions_delay.tsv'), sep='\t')
+
 # gauge percentage of delayed trips
-if slider_hour <= 5:
-    delay = random.choice(range(0, 20))
-elif slider_hour < 10:
-    delay = random.choice(range(40, 70))
-elif slider_hour < 15:
-    delay = random.choice(range(20, 40))
-elif slider_hour < 20:
-    delay = random.choice(range(40, 90))
-else:
-    delay = random.choice(range(0, 20))
+delay = dhc[(dhc.conditions==conditions) & (dhc.hour==slider_hour)].delay_indicator.values[0]
 
 
 fig = go.Figure(go.Indicator(
