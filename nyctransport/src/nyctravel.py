@@ -231,7 +231,7 @@ wind = hour.windspeed.values[0]
 desc = day.get('description')
 icon = day.get('icon')
 icon_url = icon_base % icon
-m2.header('Weather Conditions')
+m2.header('Weather Forecast')
 m2.write('**%s**' % desc[:-1])
 m2.image(icon_url, width=120)
 
