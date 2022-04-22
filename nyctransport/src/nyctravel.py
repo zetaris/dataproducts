@@ -92,7 +92,7 @@ with st.sidebar:
     elif menu == 'Data Owner':
         smenu = stom.option_menu(
             menu_title='Data Owner',
-            options=['Data Mesh Demos'],
+            options=['Chief Data Officer'],
             default_index=-1,
             menu_icon='person',
             styles={
@@ -104,7 +104,7 @@ with st.sidebar:
     elif menu == 'Domain':
         smenu = stom.option_menu(
             menu_title='Data Owner',
-            options=['NYC Travel'],
+            options=['NYC Taxi and Limousine Commission', 'New York City Police Department', 'Visual Crossing Weather'],
             default_index=-1,
             menu_icon='diagram-3',
             styles={
@@ -116,7 +116,7 @@ with st.sidebar:
     elif menu == 'Data Sources':
         smenu = stom.option_menu(
             menu_title='Data Sources',
-            options=['NYC Open Data Portal', 'NYC Taxi Trips', 'Visual Crossing Weather'],
+            options=['NYC Open Data Portal', 'NYC Yellow Taxi Trips', 'NYPD Collisions', 'Visual Crossing Weather'],
             default_index=-1,
             menu_icon='boxes',
             styles={
@@ -128,7 +128,7 @@ with st.sidebar:
     elif menu == 'Data Access':
         smenu = stom.option_menu(
             menu_title='Data Access',
-            options=['NYC Open Data Portal', 'NYC Taxi Trips', 'Visual Crossing Weather'],
+            options=['NYC Open Data Portal', 'NYC Yellow Taxi Trips', 'NYPD Collisions', 'Visual Crossing Weather API'],
             default_index=-1,
             menu_icon='code-slash',
             styles={
