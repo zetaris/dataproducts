@@ -80,7 +80,7 @@ else:
 
 # hourly delay percentage by pudo zone and weather conditions
 #pudo = pd.read_csv('/app/nyctravel/data/airport_hour_delay_percentage.tsv', sep='\t')
-pudo = pd.read_csv(join(CWD, '../data/airport_hour_delay_percentage.tsv', sep='\t'))
+pudo = pd.read_csv(join(CWD, '../data/airport_hour_delay_percentage.tsv'), sep='\t')
 puzones = pudo.zone_pickup.unique()
 dozones = pudo.zone_dropoff.unique()
 
