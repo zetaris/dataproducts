@@ -22,10 +22,40 @@ VC_KEY = st.secrets['vc_api_key']
 # cwd
 CWD = dirname(__file__)
 
+# sidebar theme
+#st.markdown( """ <style> .sidebar .sidebar-content { background-image: linear-gradient(#2e7bcf,#2e7bcf); color: white; } </style> """, unsafe_allow_html=True, )
+#st.markdown("""<style> section[data-testid=“stSidebar”] div[class=“css-17eq0hr e1fqkh3o1”] {background-image: linear-gradient(#8993ab,#8993ab);color: white} </style>""",unsafe_allow_html=True)
+
+# sidebar width
+# increase sidebar width
+st.markdown(
+    """
+    <style>
+    [data-testid="stSidebar"][aria-expanded="true"] > div:first-child {
+        width: 400px;
+    }
+    [data-testid="stSidebar"][aria-expanded="false"] > div:first-child {
+        width: 400px;
+        margin-left: -500px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+
+# banner
+st.image(join(CWD, '../images/nyc.transport.jpg'), use_column_width=True)
+
+# footer
+st.markdown("""<style> footer {visibility: hidden;} </style>""", unsafe_allow_html=True) 
+
 h1, h2, h3 = st.columns(3)
-h1.title('NYC Travel Portal')
+#h1.title('NYC Travel Portal')
+h1.write('  ')
+h1.write('  ')
 h1.write('Data Product powered by Zetaris Data Mesh')
-h3.image('https://www.zetaris.com/hs-fs/hubfs/Zetaris-3D---FINAL-V2.png?width=300&name=Zetaris-3D---FINAL-V2.png')
+st.sidebar.image('https://www.zetaris.com/hs-fs/hubfs/Zetaris-3D---FINAL-V2.png?width=300&name=Zetaris-3D---FINAL-V2.png')
 
 
 icon_base = 'https://raw.githubusercontent.com/visualcrossing/WeatherIcons/main/PNG/2nd%%20Set%%20-%%20Color/%s.png'
@@ -68,87 +98,6 @@ puzone = st.sidebar.selectbox('Pickup Zone', puzones)
 dozone = st.sidebar.selectbox('Airport', dozones)
 
 
-st.sidebar.write('')
-st.sidebar.write('')
-# data card
-with st.sidebar:
-    menu = stom.option_menu(
-        menu_title = 'Data Card',
-        options = ['Description', 'Data Owner', 'Domain', 'Data Sources', 'Data Access'],
-        icons = ['journal-text', 'person', 'diagram-3', 'boxes', 'code-slash'],
-        default_index=0,
-        menu_icon='card-heading',
-        #orientation="horizontal",
-        styles={
-            "nav-link" : {"--hover-color": "#27a7d2"},
-            "nav-link-selected": {"background-color": "#27a7d2"},
-            "icon": {"color": "#27a7d2"}
-        }
-    )
-
-    if menu == 'Description':
-        smenu = stom.option_menu(
-            menu_title='Description',
-            options=['This data product provides a visual representation of NYC travel times, predicted delays, weather, and collisions for a given date and hour of the day.'],
-            default_index=-1,
-            menu_icon='journal-text',
-            styles={
-                "nav-link" : {"--hover-color": "#27a7d2"},
-                "nav-link-selected": {"background-color": "#27a7d2"},
-                "icon": {"color": "#27a7d2"}
-            }
-        )
-    elif menu == 'Data Owner':
-        smenu = stom.option_menu(
-            menu_title='Data Owner',
-            options=['Chief Data Officer'],
-            default_index=-1,
-            menu_icon='person',
-            styles={
-                "nav-link" : {"--hover-color": "#27a7d2"},
-                "nav-link-selected": {"background-color": "#27a7d2"},
-                "icon": {"color": "#27a7d2"}
-            }
-        )
-    elif menu == 'Domain':
-        smenu = stom.option_menu(
-            menu_title='Data Owner',
-            options=['NYC Taxi and Limousine Commission', 'New York City Police Department', 'Visual Crossing Weather'],
-            default_index=-1,
-            menu_icon='diagram-3',
-            styles={
-                "nav-link" : {"--hover-color": "#27a7d2"},
-                "nav-link-selected": {"background-color": "#27a7d2"},
-                "icon": {"color": "#27a7d2"}
-            }
-        )
-    elif menu == 'Data Sources':
-        smenu = stom.option_menu(
-            menu_title='Data Sources',
-            options=['NYC Open Data Portal', 'NYC Yellow Taxi Trips', 'NYPD Collisions', 'Visual Crossing Weather'],
-            default_index=-1,
-            menu_icon='boxes',
-            styles={
-                "nav-link" : {"--hover-color": "#27a7d2"},
-                "nav-link-selected": {"background-color": "#27a7d2"},
-                "icon": {"color": "#27a7d2"}
-            }
-        )
-    elif menu == 'Data Access':
-        smenu = stom.option_menu(
-            menu_title='Data Access',
-            options=['NYC Open Data Portal', 'NYC Yellow Taxi Trips', 'NYPD Collisions', 'Visual Crossing Weather API'],
-            default_index=-1,
-            menu_icon='code-slash',
-            styles={
-                "nav-link" : {"--hover-color": "#27a7d2"},
-                "nav-link-selected": {"background-color": "#27a7d2"},
-                "icon": {"color": "#27a7d2"}
-            }
-        )
-    else:
-        pass
-
 
 @st.cache
 def get_weather(date=None):
@@ -169,13 +118,6 @@ conditions = day.get('conditions')
 # hourly weather df
 hrs = pd.DataFrame(hours)
 
-# weather metrics
-day, hours = get_weather(date)
-# conditions
-conditions = day.get('conditions')
-# hourly weather df
-hrs = pd.DataFrame(hours)
-
 
 m1, m2 = st.columns(2)
 
@@ -185,7 +127,6 @@ m1.header('Travel Delay Indicator')
 # overall delay-hour-condition model
 dhc = pd.read_csv(join(CWD, '../data/airport_hour_conditions_delay.tsv'), sep='\t')
 
-#st.write(dhc.head())
 
 # gauge percentage of delayed trips
 delay = dhc[(dhc.conditions==conditions) & (dhc.hour==slider_hour)].delay_indicator.values[0]
@@ -318,10 +259,11 @@ jfk = [40.6650, -73.7821]
 newark = [40.7090, -74.1805]
 zoom_level = 12
 
-st.header('Collisions')
-st.write('NYC police reported motor vehicle collisions between %s and %s' % (prev_hour_str, slider_hour_str))
-# plot map points
-# 
-df = pd.read_csv(join(CWD, '../data/nyc_collisions_2022_jan_feb.csv'))
-st.map(df[df.hour==slider_hour][['latitude', 'longitude']])
+with st.expander('Collisions'):
+    ctr = st.container()
+    ctr.header('Collisions')
+    ctr.write('NYPD police reported motor vehicle collisions between %s and %s' % (prev_hour_str, slider_hour_str))
+    # plot map points
+    df = pd.read_csv(join(CWD, '../data/nyc_collisions_2022_jan_feb.csv'))
+    ctr.map(df[df.hour==slider_hour][['latitude', 'longitude']])
 
