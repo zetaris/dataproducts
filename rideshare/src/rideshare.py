@@ -5,6 +5,7 @@
 """An example of mapping geographic data."""
 
 import streamlit as st
+import streamlit_option_menu as stom
 import pandas as pd
 import numpy as np
 import altair as alt
@@ -16,12 +17,57 @@ from os.path import dirname, join
 st.set_page_config(
     page_title="NYC Ride Share",
     layout="wide",
-    page_icon=None,
+    page_icon='favicon.ico',
     initial_sidebar_state="collapsed",
 )
 
 
-st.sidebar.header('NYC Ride Share')
+#st.sidebar.header('NYC Ride Share')
+#st.sidebar.write('')
+
+# stom menu
+with st.sidebar:
+    menu = stom.option_menu(
+        menu_title='Data Card',
+        options=['Description', 'Data Owner', 'Domain', 'Data Source', 'Data Access'],
+        icons = ['journal-text', 'person', 'diagram-3', 'boxes', 'code-slash'],
+        default_index=0,
+        menu_icon='card-heading',
+        styles={
+            "nav-link" : {"--hover-color": "#27a7d2"},
+            "nav-link-selected": {"background-color": "#27a7d2"},
+            "icon": {"color": "#27a7d2"}
+        }
+    )
+
+    if menu == 'Description':
+        smenu = stom.option_menu(
+            menu_title='Description',
+            options=['This data product provides a visual representation of NYC trip pick-ups and drop-offs for a given hour of the day.'],
+            default_index=-1,
+            menu_icon='journal-text',
+            styles={
+                "nav-link" : {"--hover-color": "#27a7d2"},
+                "nav-link-selected": {"background-color": "#27a7d2"},
+                "icon": {"color": "#27a7d2"}
+            }
+        )
+
+
+#st.sidebar.subheader('Data Card')
+#st.sidebar.write('')
+#st.sidebar.subheader('Description')
+#st.sidebar.write('Ride share pickups over time in New York City and its major regional airports.')
+#st.sidebar.write('')
+#st.sidebar.subheader('Data Owner')
+#st.sidebar.write('')
+#st.sidebar.subheader('Domain')
+#st.sidebar.write('')
+#st.sidebar.subheader('Data Source')
+#st.sidebar.write('')
+#st.sidebar.subheader('Data Access')
+#st.sidebar.write('')
+
 
 h1, h2, h3 = st.columns(3)
 h1.title('NYC Ride Share')
@@ -142,7 +188,7 @@ with row2_1:
     map(filterdata(data, hour_selected), midpoint[0], midpoint[1], 11)
 
 with row2_2:
-    st.write("**La Guardia Airport**")
+    st.write("**LaGuardia Airport**")
     map(filterdata(data, hour_selected), la_guardia[0], la_guardia[1], zoom_level)
 
 with row2_3:

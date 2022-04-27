@@ -1,5 +1,6 @@
 from gc import callbacks
 import streamlit as st
+import streamlit_option_menu as stom
 import pandas as pd
 import numpy as np
 import datetime
@@ -7,13 +8,19 @@ import altair as alt
 import plotly.graph_objects as go
 import urllib
 import json
+import random
+from os.path import dirname, join
+
 
 
 # wide page layout
-st.set_page_config(layout="wide")
+st.set_page_config(page_title='NYC Travel', layout="wide", page_icon='favicon.ico')
 
 # Weather API key
 VC_KEY = st.secrets['vc_api_key']
+
+# cwd
+CWD = dirname(__file__)
 
 h1, h2, h3 = st.columns(3)
 h1.title('NYC Travel Portal')
@@ -60,6 +67,89 @@ puzone = st.sidebar.selectbox('Pickup Zone', puzones)
 # airport selection from dropdown menu
 dozone = st.sidebar.selectbox('Airport', dozones)
 
+
+st.sidebar.write('')
+st.sidebar.write('')
+# data card
+with st.sidebar:
+    menu = stom.option_menu(
+        menu_title = 'Data Card',
+        options = ['Description', 'Data Owner', 'Domain', 'Data Sources', 'Data Access'],
+        icons = ['journal-text', 'person', 'diagram-3', 'boxes', 'code-slash'],
+        default_index=0,
+        menu_icon='card-heading',
+        #orientation="horizontal",
+        styles={
+            "nav-link" : {"--hover-color": "#27a7d2"},
+            "nav-link-selected": {"background-color": "#27a7d2"},
+            "icon": {"color": "#27a7d2"}
+        }
+    )
+
+    if menu == 'Description':
+        smenu = stom.option_menu(
+            menu_title='Description',
+            options=['This data product provides a visual representation of NYC travel times, predicted delays, weather, and collisions for a given date and hour of the day.'],
+            default_index=-1,
+            menu_icon='journal-text',
+            styles={
+                "nav-link" : {"--hover-color": "#27a7d2"},
+                "nav-link-selected": {"background-color": "#27a7d2"},
+                "icon": {"color": "#27a7d2"}
+            }
+        )
+    elif menu == 'Data Owner':
+        smenu = stom.option_menu(
+            menu_title='Data Owner',
+            options=['Chief Data Officer'],
+            default_index=-1,
+            menu_icon='person',
+            styles={
+                "nav-link" : {"--hover-color": "#27a7d2"},
+                "nav-link-selected": {"background-color": "#27a7d2"},
+                "icon": {"color": "#27a7d2"}
+            }
+        )
+    elif menu == 'Domain':
+        smenu = stom.option_menu(
+            menu_title='Data Owner',
+            options=['NYC Taxi and Limousine Commission', 'New York City Police Department', 'Visual Crossing Weather'],
+            default_index=-1,
+            menu_icon='diagram-3',
+            styles={
+                "nav-link" : {"--hover-color": "#27a7d2"},
+                "nav-link-selected": {"background-color": "#27a7d2"},
+                "icon": {"color": "#27a7d2"}
+            }
+        )
+    elif menu == 'Data Sources':
+        smenu = stom.option_menu(
+            menu_title='Data Sources',
+            options=['NYC Open Data Portal', 'NYC Yellow Taxi Trips', 'NYPD Collisions', 'Visual Crossing Weather'],
+            default_index=-1,
+            menu_icon='boxes',
+            styles={
+                "nav-link" : {"--hover-color": "#27a7d2"},
+                "nav-link-selected": {"background-color": "#27a7d2"},
+                "icon": {"color": "#27a7d2"}
+            }
+        )
+    elif menu == 'Data Access':
+        smenu = stom.option_menu(
+            menu_title='Data Access',
+            options=['NYC Open Data Portal', 'NYC Yellow Taxi Trips', 'NYPD Collisions', 'Visual Crossing Weather API'],
+            default_index=-1,
+            menu_icon='code-slash',
+            styles={
+                "nav-link" : {"--hover-color": "#27a7d2"},
+                "nav-link-selected": {"background-color": "#27a7d2"},
+                "icon": {"color": "#27a7d2"}
+            }
+        )
+    else:
+        pass
+
+
 @st.cache
 def get_weather(date=None):
     'get weather for a given date or today if None'
@@ -72,6 +162,12 @@ def get_weather(date=None):
     hours = day.get('hours')
     return day, hours
 
+# weather metrics
+day, hours = get_weather(date)
+# conditions
+conditions = day.get('conditions')
+# hourly weather df
+hrs = pd.DataFrame(hours)
 
 # weather metrics
 day, hours = get_weather(date)
@@ -87,11 +183,13 @@ m1, m2 = st.columns(2)
 m1.header('Travel Delay Indicator')
 
 # overall delay-hour-condition model
-dhc = pd.read_csv('../data/airport_hour_conditions_delay.tsv', sep='\t')
+dhc = pd.read_csv(join(CWD, '../data/airport_hour_conditions_delay.tsv'), sep='\t')
+
+#st.write(dhc.head())
 
 # gauge percentage of delayed trips
 delay = dhc[(dhc.conditions==conditions) & (dhc.hour==slider_hour)].delay_indicator.values[0]
-#m2.write(gauge(labels=['Low', 'Medium', 'High'], arrow=delay))
+
 
 fig = go.Figure(go.Indicator(
     mode = "gauge+number",
@@ -141,7 +239,6 @@ fig.update_layout(
 m1.write(fig)
 
 
-m2.header("Weather Forecast")
 # obtain weather for slider_hour_str
 hour = hrs[hrs['datetime']==slider_hour_str]
 temp = hour.temp.values[0]
@@ -151,8 +248,9 @@ wind = hour.windspeed.values[0]
 desc = day.get('description')
 icon = day.get('icon')
 icon_url = icon_base % icon
+m2.header('Weather Forecast')
 m2.write('**%s**' % desc[:-1])
-m2.image(icon_url, width=140)
+m2.image(icon_url, width=120)
 
 # spacer
 st.write(' ')
@@ -204,25 +302,14 @@ x2.line_chart(hrs['windspeed'], height=200)
 st.header("Travel Delay Prediction")
 st.write('Likelihood of delay from %s to %s' % (puzone, dozone))
 # hourly probability of delay
-
-# pudo delay values for given puzone, dozone, conditions, and hour
-delays = pudo[(pudo.zone_pickup==puzone) & (pudo.zone_dropoff==dozone) & (pudo.conditions==day.get('conditions'))]
-
-# altair chart hourly delays histogram
-chart = alt.Chart(delays).mark_bar(size=40).encode(
-    x=alt.X('hour', scale=alt.Scale(domain=[0, 23])),
-    y=alt.Y('trip_delay', scale=alt.Scale(domain=[0, 1])),
-    #color=alt.Color('trip_delay', scale=alt.Scale(scheme='blues'))
-)
-
-text = alt.Chart(delays).mark_text(dx=0, dy=20, color='black').encode(
-    x=alt.X('hour', scale=alt.Scale(domain=[0, 23])),
-    y=alt.Y('trip_delay', scale=alt.Scale(domain=[0, 1])),
-    detail='trip_delay',
-    text=alt.Text('trip_delay', format='.1f')
-)
-
-st.altair_chart(chart + text, use_container_width=True)
+hrs['delay'] = [1.88744589, 5.11280239, 10.2020454 ,  9.03790087,  7.64281398,
+        15.88871278,  27.06624028,  48.81446728, 60.74875574, 70.19265685,
+        65.78954048,  34.36287642,  22.684458  , 15.35649996, 41.7883561 ,
+       58.66204771, 74.51793124, 85.46380269, 54.49042022, 31.69195251,
+       12.63465126, 11.93111295, 13.74051771, 16.67041873]
+# add positive random noise to delay
+hrs['delay'] = hrs['delay'] + np.abs(np.random.normal(0, slider_hour, len(hrs)))
+st.bar_chart(hrs['delay'], height=400)
 
 
 # airport locations
@@ -232,9 +319,9 @@ newark = [40.7090, -74.1805]
 zoom_level = 12
 
 st.header('Collisions')
-st.write('NYC police reported motor vehicle collisions')
+st.write('NYC police reported motor vehicle collisions between %s and %s' % (prev_hour_str, slider_hour_str))
 # plot map points
-df = pd.DataFrame(
-     np.random.randn(1000, 2) / [30, 30] + [40.740610, -73.995242], columns=['lat', 'lon'])
+# 
+df = pd.read_csv(join(CWD, '../data/nyc_collisions_2022_jan_feb.csv'))
+st.map(df[df.hour==slider_hour][['latitude', 'longitude']])
 
-st.map(df)

@@ -13,7 +13,7 @@ import pandas as pd
 st.set_page_config(
     page_title="Stock Price Forecast",
     layout="wide",
-    page_icon=None,
+    page_icon='z_favicon.jpeg',
     initial_sidebar_state="collapsed",
 )
 
