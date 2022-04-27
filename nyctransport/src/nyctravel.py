@@ -73,9 +73,14 @@ slider_hour = st.sidebar.slider('Hour of the day', 0, 23, today.hour)
 # format slider_hour as a hh:mm:ss string
 slider_hour_str = "%02d:00:00" % slider_hour
 if slider_hour == 0:
-    prev_hour_str = "23:00:00"
+    prev_hour_str = '23:00:00'
+    next_hour_str = '01:00:00'
+elif slider_hour == 23:
+    prev_hour_str = '22:00:00'
+    next_hour_str = '00:00:00'
 else:
     prev_hour_str = "%02d:00:00" % (slider_hour - 1)
+    next_hour_str = "%02d:00:00" % (slider_hour + 1)
 
 
 # hourly delay percentage by pudo zone and weather conditions
@@ -263,7 +268,7 @@ zoom_level = 12
 with st.expander('Collisions'):
     ctr = st.container()
     ctr.header('Collisions')
-    ctr.write('NYPD police reported motor vehicle collisions between %s and %s' % (prev_hour_str, slider_hour_str))
+    ctr.write('NYPD police reported motor vehicle collisions between %s and %s' % (slider_hour_str, next_hour_str))
     # plot map points
     df = pd.read_csv(join(CWD, '../data/nyc_collisions_2022_jan_feb.csv'))
     ctr.map(df[df.hour==slider_hour][['latitude', 'longitude']])
