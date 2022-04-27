@@ -12,7 +12,6 @@ import random
 from os.path import dirname, join
 
 
-
 # wide page layout
 st.set_page_config(page_title='NYC Travel', layout="wide", page_icon='favicon.ico')
 
@@ -122,8 +121,6 @@ day, hours = get_weather(date)
 conditions = day.get('conditions')
 # hourly weather df
 hrs = pd.DataFrame(hours)
-
-st.write(conditions)
 
 m1, m2 = st.columns(2)
 
