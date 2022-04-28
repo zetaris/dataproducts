@@ -284,7 +284,7 @@ with st.expander('Collisions'):
 with st.expander('Weather'):
     wtr = st.container()
     wtr.header('Weather Forecast')
-    wtr.write('Forecast for %s : **%s**' % (date, desc[:-1]))
+    wtr.write('**%s**' % desc[:-1])
     wtr.image(icon_url, width=120)
     # create three columns
     w1, w2, w3, w4 = st.columns(4)
