@@ -55,11 +55,15 @@ h1.write('  ')
 h1.write('  ')
 h1.write('Data Product powered by Zetaris Data Mesh')
 #st.sidebar.image('https://www.zetaris.com/hs-fs/hubfs/Zetaris-3D---FINAL-V2.png?width=300&name=Zetaris-3D---FINAL-V2.png')
-st.sidebar.image(join(CWD, '../images/zetaris.horizontal.png'))
+# center image
+s1,s2,s3 = st.sidebar.columns([1,5,1])
+s2.image(join(CWD, '../images/zetaris.horizontal.png'), use_column_width=True)
 
 icon_base = 'https://raw.githubusercontent.com/visualcrossing/WeatherIcons/main/PNG/2nd%%20Set%%20-%%20Color/%s.png'
 
 # date picker
+st.sidebar.write(' ')
+st.sidebar.write(' ')
 st.sidebar.header('Travel Details')
 # select a date between today to two weeks from now
 today = pd.to_datetime('today')
