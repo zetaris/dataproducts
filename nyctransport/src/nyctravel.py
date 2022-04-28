@@ -54,8 +54,8 @@ h1, h2, h3 = st.columns(3)
 h1.write('  ')
 h1.write('  ')
 h1.write('Data Product powered by Zetaris Data Mesh')
-st.sidebar.image('https://www.zetaris.com/hs-fs/hubfs/Zetaris-3D---FINAL-V2.png?width=300&name=Zetaris-3D---FINAL-V2.png')
-
+#st.sidebar.image('https://www.zetaris.com/hs-fs/hubfs/Zetaris-3D---FINAL-V2.png?width=300&name=Zetaris-3D---FINAL-V2.png')
+st.sidebar.image(join(CWD, '../images/zetaris.horizontal.png'))
 
 icon_base = 'https://raw.githubusercontent.com/visualcrossing/WeatherIcons/main/PNG/2nd%%20Set%%20-%%20Color/%s.png'
 
