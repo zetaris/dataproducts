@@ -49,11 +49,14 @@ st.image(join(CWD, '../images/nyc.transport.jpg'), use_column_width=True)
 # footer
 st.markdown("""<style> footer {visibility: hidden;} </style>""", unsafe_allow_html=True) 
 
-h1, h2, h3 = st.columns(3)
+h1, h2, h3 = st.columns([2, 7, 2])
 #h1.title('NYC Travel Portal')
 h1.write('  ')
 h1.write('  ')
-h1.write('powered by Zetaris')
+#h1.write('powered by Zetaris')
+h1.markdown('''<a href="https://www.zetaris.com" target="_blank">''', unsafe_allow_html=True)
+h1.image(join(CWD, '../images/poweredby.jpg'), use_column_width=True)
+h1.markdown('''</a>''', unsafe_allow_html=True)
 #st.sidebar.image('https://www.zetaris.com/hs-fs/hubfs/Zetaris-3D---FINAL-V2.png?width=300&name=Zetaris-3D---FINAL-V2.png')
 # center image
 s1,s2,s3 = st.sidebar.columns([1,5,1])
@@ -251,10 +254,16 @@ st.write('Likelihood of delay from %s to %s' % (puzone, dozone))
 hrs['delay'] = [1.88744589, 5.11280239, 10.2020454 ,  9.03790087,  7.64281398,
         15.88871278,  27.06624028,  48.81446728, 60.74875574, 70.19265685,
         65.78954048,  34.36287642,  22.684458  , 15.35649996, 41.7883561 ,
-       58.66204771, 74.51793124, 85.46380269, 54.49042022, 31.69195251,
+       58.66204771, 74.51793124, 80.46380269, 54.49042022, 31.69195251,
        12.63465126, 11.93111295, 13.74051771, 16.67041873]
+
+# set nump random seed
+seed = int(str(date).replace('-', '')) + int(str(hash(puzone))[:6]) + int(str(hash(dozone))[:6])  
+np.random.seed(seed)
 # add positive random noise to delay
-hrs['delay'] = hrs['delay'] + np.abs(np.random.normal(0, slider_hour, len(hrs)))
+hrs['delay'] = hrs['delay'] + np.abs(np.random.normal(0, 10, len(hrs)))
+# limit max value to 90
+hrs['delay'] = np.minimum(hrs['delay'], 95)
 st.bar_chart(hrs['delay'], height=400)
 
 
@@ -271,4 +280,3 @@ with st.expander('Collisions'):
     # plot map points
     df = pd.read_csv(join(CWD, '../data/nyc_collisions_2022_jan_feb.csv'))
     ctr.map(df[df.hour==slider_hour][['latitude', 'longitude']])
-
