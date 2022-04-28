@@ -280,3 +280,8 @@ with st.expander('Collisions'):
     # plot map points
     df = pd.read_csv(join(CWD, '../data/nyc_collisions_2022_jan_feb.csv'))
     ctr.map(df[df.hour==slider_hour][['latitude', 'longitude']])
+
+with st.expander('Weather'):
+    wtr = st.container()
+    wtr.header('Weather')
+    wtr.write('Weather forecast for %s' % date)
