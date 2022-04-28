@@ -283,5 +283,13 @@ with st.expander('Collisions'):
 
 with st.expander('Weather'):
     wtr = st.container()
-    wtr.header('Weather')
-    wtr.write('Weather forecast for %s' % date)
+    wtr.header('Weather Forecast')
+    wtr.write('Forecast for %s : **%s**' % (date, desc[:-1]))
+    wtr.image(icon_url, width=120)
+    # create three columns
+    w1, w2, w3, w4 = st.columns(4)
+
+    w1.metric(label='Temperature', value='%.1f °C' % temp, delta=tempdelta)
+    w2.metric(label='Rainfall', value='%.1f mm' % precip, delta=precipdelta, delta_color=precip_delta_color)
+    w3.metric(label='Humidity', value='%.1f%%' % humidity, delta=humiditydelta)
+    w4.metric(label='Wind Speed', value='%.1f kph' % wind, delta=winddelta)
