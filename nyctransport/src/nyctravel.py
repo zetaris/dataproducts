@@ -100,13 +100,6 @@ dozones = pudo.zone_dropoff.unique()
 date_hour = pd.to_datetime(date) + pd.Timedelta(hours=slider_hour)
 # write timestamp to sidebar
 st.write('**%s**' % date_hour.strftime("%H:%M %A, %B %d, %Y"))
-# pickup zones
-puzone = st.sidebar.selectbox('Pickup Zone', puzones)
-
-# dropdown menu
-#airport_list = ['John F. Kennedy (JFK)', 'LaGuardia (LGA)', 'Newark (EWR)']
-# airport selection from dropdown menu
-dozone = st.sidebar.selectbox('Airport', dozones)
 
 @st.cache
 def get_weather(date=None):
@@ -249,7 +242,16 @@ x2.line_chart(hrs['windspeed'], height=200)
 
 # delay prediction
 st.header("Travel Delay Prediction")
-st.write('Likelihood of delay from %s to %s' % (puzone, dozone))
+
+p1, p2 = st.columns(2)
+# pickup zones
+puzone = p1.selectbox('Pickup Zone', puzones)
+
+# dropdown menu
+#airport_list = ['John F. Kennedy (JFK)', 'LaGuardia (LGA)', 'Newark (EWR)']
+# airport selection from dropdown menu
+dozone = p2.selectbox('Airport', dozones)
+st.write('Likelihood of delay from %s to %s for %s' % (puzone, dozone, date.strftime('%B %d, %Y')))
 # hourly probability of delay
 hrs['delay'] = [1.88744589, 5.11280239, 10.2020454 ,  9.03790087,  7.64281398,
         15.88871278,  27.06624028,  48.81446728, 60.74875574, 70.19265685,
