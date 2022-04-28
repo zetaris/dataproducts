@@ -95,6 +95,13 @@ pudo = pd.read_csv(join(CWD, '../data/airport_hour_delay_percentage.tsv'), sep='
 puzones = pudo.zone_pickup.unique()
 dozones = pudo.zone_dropoff.unique()
 
+# pickup zones
+puzone = st.sidebar.selectbox('Pickup Zone', puzones)
+
+# dropdown menu
+#airport_list = ['John F. Kennedy (JFK)', 'LaGuardia (LGA)', 'Newark (EWR)']
+# airport selection from dropdown menu
+dozone = st.sidebar.selectbox('Airport', dozones)
 
 # add slider_hour to date hours
 date_hour = pd.to_datetime(date) + pd.Timedelta(hours=slider_hour)
@@ -242,29 +249,21 @@ x2.line_chart(hrs['windspeed'], height=200)
 
 # delay prediction
 st.header("Travel Delay Prediction")
-
-p1, p2 = st.columns(2)
-# pickup zones
-puzone = p1.selectbox('Pickup Zone', puzones)
-
-# dropdown menu
-#airport_list = ['John F. Kennedy (JFK)', 'LaGuardia (LGA)', 'Newark (EWR)']
-# airport selection from dropdown menu
-dozone = p2.selectbox('Airport', dozones)
 st.write('Likelihood of delay from %s to %s for %s' % (puzone, dozone, date.strftime('%B %d, %Y')))
+
 # hourly probability of delay
-hrs['delay'] = [1.88744589, 5.11280239, 10.2020454 ,  9.03790087,  7.64281398,
-        15.88871278,  27.06624028,  48.81446728, 60.74875574, 70.19265685,
-        65.78954048,  34.36287642,  22.684458  , 15.35649996, 41.7883561 ,
-       58.66204771, 74.51793124, 80.46380269, 54.49042022, 31.69195251,
+hrs['delay'] = [5.88744589, 5.11280239, 7.2020454 ,  8.03790087,  6.64281398,
+        10.88871278,  17.06624028,  28.81446728, 40.74875574, 50.19265685,
+        55.78954048,  24.36287642,  12.684458  , 15.35649996, 31.7883561 ,
+       48.66204771, 54.51793124, 60.46380269, 54.49042022, 31.69195251,
        12.63465126, 11.93111295, 13.74051771, 16.67041873]
 
-# set nump random seed
+# numpy seed
 seed = int(str(date).replace('-', '')) + int(str(hash(puzone))[:6]) + int(str(hash(dozone))[:6])  
 np.random.seed(seed)
-# add positive random noise to delay
+# add positive delta to delay
 hrs['delay'] = hrs['delay'] + np.abs(np.random.normal(0, 10, len(hrs)))
-# limit max value to 90
+# limit max value to 95
 hrs['delay'] = np.minimum(hrs['delay'], 95)
 st.bar_chart(hrs['delay'], height=400)
 
