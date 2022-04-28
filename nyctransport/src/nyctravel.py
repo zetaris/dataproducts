@@ -53,7 +53,7 @@ h1, h2, h3 = st.columns(3)
 #h1.title('NYC Travel Portal')
 h1.write('  ')
 h1.write('  ')
-h1.write('Data Product powered by Zetaris Data Mesh')
+h1.write('powered by Zetaris')
 #st.sidebar.image('https://www.zetaris.com/hs-fs/hubfs/Zetaris-3D---FINAL-V2.png?width=300&name=Zetaris-3D---FINAL-V2.png')
 # center image
 s1,s2,s3 = st.sidebar.columns([1,5,1])
@@ -104,8 +104,6 @@ puzone = st.sidebar.selectbox('Pickup Zone', puzones)
 #airport_list = ['John F. Kennedy (JFK)', 'LaGuardia (LGA)', 'Newark (EWR)']
 # airport selection from dropdown menu
 dozone = st.sidebar.selectbox('Airport', dozones)
-
-
 
 @st.cache
 def get_weather(date=None):
