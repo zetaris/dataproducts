@@ -43,28 +43,23 @@ st.markdown(
 )
 
 
-# banner
-st.image(join(CWD, '../images/nyc.transport.jpg'), use_column_width=True)
+# main banner
+st.image(join(CWD, '../images/nycgo.jpg'), use_column_width=True)
 
 # footer
 st.markdown("""<style> footer {visibility: hidden;} </style>""", unsafe_allow_html=True) 
 
+# powered by Zetaris
 h1, h2, h3 = st.columns([2, 7, 2])
-#h1.title('NYC Travel Portal')
-h1.write('  ')
-h1.write('  ')
-#h1.write('powered by Zetaris')
-h1.markdown('''<a href="https://www.zetaris.com" target="_blank">''', unsafe_allow_html=True)
 h1.image(join(CWD, '../images/poweredby.jpg'), use_column_width=True)
-h1.markdown('''</a>''', unsafe_allow_html=True)
-#st.sidebar.image('https://www.zetaris.com/hs-fs/hubfs/Zetaris-3D---FINAL-V2.png?width=300&name=Zetaris-3D---FINAL-V2.png')
-# center image
+
+# sidebar logo
 s1,s2,s3 = st.sidebar.columns([1,5,1])
 s2.image(join(CWD, '../images/zetaris.horizontal.png'), use_column_width=True)
 
 icon_base = 'https://raw.githubusercontent.com/visualcrossing/WeatherIcons/main/PNG/2nd%%20Set%%20-%%20Color/%s.png'
 
-# date picker
+# date selector
 st.sidebar.write(' ')
 st.sidebar.write(' ')
 st.sidebar.header('Travel Details')
