@@ -1,6 +1,7 @@
 import streamlit as st
 #import pandas as pd
 #import numpy as np
+import jaydebeapi
 import datetime
 #import altair as alt
 #import plotly.graph_objects as go
@@ -10,7 +11,7 @@ from os.path import dirname, join
 
 
 # wide page layout
-st.set_page_config(page_title='NYC Travel', layout="wide", page_icon='favicon.ico')
+st.set_page_config(page_title='NYC Flights', layout="wide", page_icon='favicon.ico')
 
 # Weather API key
 #VC_KEY = st.secrets['vc_api_key']
@@ -53,6 +54,12 @@ h1.image(join(CWD, '../images/poweredby.jpg'), use_column_width=True)
 # sidebar logo
 s1,s2,s3 = st.sidebar.columns([1,5,1])
 s2.image(join(CWD, '../images/zetaris.horizontal.png'), use_column_width=True)
+
+# date selector
+# today date as YYYY-MM-DD
+today = datetime.datetime.today()
+date = st.date_input('Travel date', min_value=today)
+st.write(date)
 
 
 
