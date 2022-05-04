@@ -12,13 +12,12 @@ from os.path import dirname, join
 # wide page layout
 st.set_page_config(page_title='NYC Flights', layout="wide", page_icon='favicon.ico')
 
-# Weather API key
-#VC_KEY = st.secrets['vc_api_key']
-
 # cwd
 CWD = dirname(__file__)
-# aviation edge key
+# Aviation Edge key
 AE_KEY = st.secrets['ae_api_key']
+# Weather API key
+VC_KEY = st.secrets['vc_api_key']
 # zetaris credentials
 VDW_USER = st.secrets['vdw_username']
 VDW_PASS = st.secrets['vdw_password']
