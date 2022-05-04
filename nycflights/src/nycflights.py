@@ -1,10 +1,11 @@
 import streamlit as st
 import pandas as pd
-#import numpy as np
+import numpy as np
 import jaydebeapi
 import datetime
 import altair as alt
 import plotly.graph_objects as go
+import random
 import urllib
 import json
 from os.path import dirname, join
@@ -140,7 +141,7 @@ ddf['departure'] = df['departure'].apply(lambda x: x['scheduledTime'])
 # exclude records with empty departure value
 ddf = ddf[ddf['departure'] != '']
 # sort by departure time
-ddf = ddf.sort_values(by=['departure'])
+ddf = ddf.sort_values(by=['departure'], ascending=False)
 
 # airport
 #ddf['airport'] = df['departure'].apply(lambda x: x['iataCode']).apply(lambda x: x.upper())
@@ -181,7 +182,7 @@ flist['flight'] = flist['flight'].apply(lambda x: x.upper())
 # insert empty row
 flist = flist.append(pd.Series(['', ''], index=flist.columns), ignore_index=True)
 # sort flist by departure time
-flist = flist.sort_values(by=['departure'])
+flist = flist.sort_values(by=['departure'], ascending=False)
 
 flightNum = c1.selectbox('Flight number', flist['flight'])
 if flightNum == '':
@@ -226,13 +227,28 @@ delay = [5.88744589, 5.11280239, 5.2020454 ,  6.03790087,  6.64281398,
        48.66204771, 54.51793124, 60.46380269, 54.49042022, 31.69195251,
        12.63465126, 11.93111295, 13.74051771, 16.67041873]
 
+# subset
+xvals = hours[depHour-3:depHour+1]
+yvals = delay[depHour-3:depHour+1]
+seed = int(str(date).replace('-', '')) 
+np.random.seed(seed)
+# create hrs delay dataframe using hours and delay
+hrs = pd.DataFrame({'delay':yvals}, index=range(depHour-3,depHour+1))
+# add positive delta to delay
+hrs['delay'] = hrs['delay'] + np.abs(np.random.normal(0, 10, len(hrs)))
+# set upper bound to 95
+hrs['delay'] = np.minimum(hrs['delay'], 95)
+
 # calculate travel time
-travelTime = (1 + delay[depHour] / 100) * 60
+# get depHour delay value from hrs
+depDelay = hrs.loc[depHour].get('delay')
+#depDelay = hrs[depHour].delay
+travelTime = (1 + depDelay / 100) * 60
 # convert travel time to hours and minutes
 travelTime = datetime.timedelta(minutes=travelTime)
 # write travel time as hours and minutes
 #d1.write('**Travel Time**')
-d1.code('Estimated Travel Time: %s hrs %s mins' % (travelTime.seconds // 3600, (travelTime.seconds // 60) % 60))
+d1.code('Estimated Travel Time: %s hr %s mins' % (travelTime.seconds // 3600, (travelTime.seconds // 60) % 60))
 # subtract travelTime fom checkin time
 leaveTime = checkin - travelTime
 # write leave time
@@ -246,23 +262,28 @@ d1.code('Recommended Leave Time: %s' % leaveTime.strftime('%H:%M'))
 #ax.set_title('Hourly probability of delay')
 #st.pyplot(fig)
 
-# create dataframe with hourly probability of delay
-delay_df = pd.DataFrame(delay[depHour-3:depHour+1], index=hours[depHour-3:depHour+1], columns=['delay'])
 # bar chart hourly probability of delay without legend
 #st.bar_chart(delay_df, use_container_width=True)
 
 fig = go.Figure()
-xvals = hours[depHour-3:depHour+1]
-yvals = delay[depHour-3:depHour+1]
+# multiple yvals by 0.1
+yerrs = [y * 0.1 for y in yvals]
+
+# with colorscale
 #fig.add_trace(go.Bar(y=yvals, x=xvals, name="delay", marker={'color': yvals, 'colorscale': 'ylorrd'}))
-fig.add_trace(go.Bar(y=yvals, x=xvals, name="delay"))
+# with error bars
+#fig.add_trace(go.Bar(y=yvals, x=xvals, name="delay", error_y=dict(type='data', array=yerrs)))
+fig.add_trace(go.Bar(y=hrs['delay'], x=xvals, name="delay"))
+# add y vals to each bar with error bars
+#fig.add_trace(go.Scatter(y=yvals, x=xvals, name="error", error_y=dict(type='data', array=yerrs)))
+
 # show color bar
-fig.update_layout(coloraxis_showscale=True)
+#fig.update_layout(coloraxis_showscale=True)
 # add yaxis title
 fig.update_layout(yaxis_title='Likelihood of Delay')
 
 # set y axis range to 100
-fig.update_layout(yaxis_range=[0, 100])
+#fig.update_layout(yaxis_range=[0, 100])
 # set background color to green between y values 0 and 20
 
 fig.update_layout(
