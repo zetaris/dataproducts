@@ -95,7 +95,7 @@ st.sidebar.write(' ')
 st.sidebar.subheader('NYC Flights')
 #st.sidebar.subheader('Description')
 st.sidebar.info('Enter trip departure date and departure airport.')
-st.sidebar.info('Select flight number to view flight details and estimated travel time.')
+st.sidebar.info('Select a flight number to view flight details, estimated airport travel time, and recommended time to leave.')
 # data sources
 st.sidebar.subheader('Data Sources')
 st.sidebar.info('Flight data sourced from Aviation Edge Flight Schedule API.')
@@ -279,7 +279,7 @@ d1.code('Recommended Leave Time: %s' % leaveTime.strftime('%H:%M'))
 
 fig = go.Figure()
 # multiple yvals by 0.1
-yerrs = [y * 0.1 for y in yvals]
+yerrs = [y * sd for (y, sd) in zip(yvals, (0.09, 0.11, 0.12, 0.14))]
 
 # with colorscale
 #fig.add_trace(go.Bar(y=yvals, x=xvals, name="delay", marker={'color': yvals, 'colorscale': 'ylorrd'}))
