@@ -101,14 +101,18 @@ flights = get_flights(date, airport)
 df = pd.DataFrame(flights)
 # drop weekday
 df = df.drop(columns=['weekday'])
+####
 #st.write(df.head(1))
 
 # extract values
 ddf = pd.DataFrame()
 ddf['flight'] = df['flight'].apply(lambda x: x['iataNumber']).apply(lambda x: x.upper())
 ddf['departure'] = df['departure'].apply(lambda x: x['scheduledTime'])
+# exclude records with empty departure value
+ddf = ddf[ddf['departure'] != '']
 # sort by departure time
 ddf = ddf.sort_values(by=['departure'])
+
 # airport
 ddf['airport'] = df['departure'].apply(lambda x: x['iataCode']).apply(lambda x: x.upper())
 # terminal
@@ -119,8 +123,6 @@ ddf['terminal'] = df['departure'].apply(lambda x: x['terminal'])
 #ddf['airline'] = df['airline'].apply(lambda x: x['name'])
 # aircraft
 #ddf['aircraft'] = df['aircraft'].apply(lambda x: x['modelText'])
-# drop records where departure is None
-ddf = ddf.dropna(subset=['departure'])
 
 # flights table display
 #st.markdown(hide_table_row_index, unsafe_allow_html=True)
