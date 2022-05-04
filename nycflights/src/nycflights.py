@@ -242,7 +242,7 @@ delay = [5.88744589, 5.11280239, 5.2020454 ,  6.03790087,  6.64281398,
 # subset
 xvals = hours[depHour-3:depHour+1]
 yvals = delay[depHour-3:depHour+1]
-seed = int(str(date).replace('-', '')) 
+seed = int(str(date).replace('-', '')) + int(str(hash(airport))[:6])
 np.random.seed(seed)
 # create hrs delay dataframe using hours and delay
 hrs = pd.DataFrame({'delay':yvals}, index=range(depHour-3,depHour+1))
