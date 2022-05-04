@@ -295,7 +295,6 @@ fig.update_layout(yaxis_title='Likelihood of Delay')
 
 # set y axis range to 100
 #fig.update_layout(yaxis_range=[0, 100])
-# set background color to green between y values 0 and 20
 
 fig.update_layout(
     plot_bgcolor='rgba(0,0,0,0)',
