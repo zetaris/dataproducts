@@ -22,7 +22,7 @@ TODAY = date.today().strftime("%Y-%m-%d")
 CWD = dirname(__file__) # /app/stockcast/src
 st.subheader('')
 
-h1, h2, h3 = st.columns(3, 2, 1)
+h1, h2, h3 = st.columns([3, 2, 1])
 h1.title('Stock Price Forecast')
 h1.write('Data Product powered by Zetaris Data Mesh')
 h3.image(join(CWD, '../images/zetaris.horizontal.png'))
