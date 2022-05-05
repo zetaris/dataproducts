@@ -20,7 +20,8 @@ st.set_page_config(
 h1, h2, h3 = st.columns(3)
 h1.title('Stock Price Forecast')
 h1.write('Data Product powered by Zetaris Data Mesh')
-h3.image('https://www.zetaris.com/hs-fs/hubfs/Zetaris-3D---FINAL-V2.png?width=300&name=Zetaris-3D---FINAL-V2.png')
+h3.image(join(CWD, '../images/zetaris.horizontal.png'))
+#h3.image('https://www.zetaris.com/hs-fs/hubfs/Zetaris-3D---FINAL-V2.png?width=300&name=Zetaris-3D---FINAL-V2.png')
 
 
 START = "2015-01-01"
