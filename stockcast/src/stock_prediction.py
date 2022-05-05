@@ -25,8 +25,8 @@ st.subheader('')
 h1, h2, h3 = st.columns([3, 1, 2])
 h1.title('Stock Price Forecast')
 #h1.write('Data Product powered by Zetaris Data Mesh')
-h1.image(join(CWD, '../images/poweredby.jpg'), width=100)
-h3.image(join(CWD, '../images/zetaris.horizontal.png'), width=200)
+h1.image(join(CWD, '../images/poweredby.jpg'), width=150)
+h3.image(join(CWD, '../images/zetaris.horizontal.png'), width=300)
 
 # increase sidebar width
 st.markdown(
