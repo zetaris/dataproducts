@@ -92,7 +92,7 @@ if submit and text:
     presence_penalty=0
     )
     # write response as streamlit code
-    sql = response.choices[0].text
+    sql = f'-- {text}{response.choices[0].text}'
     st.write(' ')
     st.code(sql, language='sql')
 
