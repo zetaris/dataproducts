@@ -15,6 +15,8 @@ from os.path import dirname, join
 # wide page layout
 st.set_page_config(page_title='NYC Travel', layout="wide", page_icon='favicon.ico')
 
+# cwd
+CWD = dirname(__file__)
 # Aviation Edge key
 AE_KEY = st.secrets['ae_api_key']
 # Weather API key
