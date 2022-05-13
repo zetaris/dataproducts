@@ -15,8 +15,25 @@ from os.path import dirname, join
 # wide page layout
 st.set_page_config(page_title='NYC Travel', layout="wide", page_icon='favicon.ico')
 
+# Aviation Edge key
+AE_KEY = st.secrets['ae_api_key']
 # Weather API key
 VC_KEY = st.secrets['vc_api_key']
+# zetaris credentials
+VDW_USER = st.secrets['vdw_username']
+VDW_PASS = st.secrets['vdw_password']
+# lightning connection
+driver_class = "com.zetaris.lightning.jdbc.LightningDriver"
+driver_file = join(CWD, '../../driver/ndp-jdbc-driver-2.1.0.12-driver.jar')
+connection_string = 'jdbc:zetaris:clouddatafabric@nycdata.5e3fe4a3.datafabric.zetaris.com/RestClient=https'
+
+@st.cache(allow_output_mutation=True)
+def lightning():
+    '''create cached lightning connection'''
+    # connect to lightning
+    con = jaydebeapi.connect(driver_class, connection_string, {'user':VDW_USER, 'password':VDW_PASS}, driver_file)
+    return con.cursor()
+
 
 # cwd
 CWD = dirname(__file__)
