@@ -68,6 +68,8 @@ s2.image(join(CWD, '../images/z.png'), width=84)
 # sidebar description
 st.sidebar.write(' ')
 st.sidebar.write(' ')
+st.sidebar.write(' ')
+st.sidebar.write(' ')
 #st.sidebar.subheader('SQL Demo')
 #st.sidebar.subheader('Description')
 st.sidebar.info('Describe a query in natural language and receive the corresponding SQL statement.')
@@ -81,7 +83,8 @@ submit = form.form_submit_button('Submit')
 if submit and text:
     response = openai.Completion.create(
     engine="text-davinci-002",
-    prompt='Generate an SQL query. {text}',
+    #engine='code-davinci-002',
+    prompt=f'Generate an SQL query. {text}',
     temperature=0.7,
     max_tokens=256,
     top_p=1,
@@ -90,6 +93,7 @@ if submit and text:
     )
     # write response as streamlit code
     sql = response.choices[0].text
+    st.write(' ')
     st.code(sql, language='sql')
 
 
