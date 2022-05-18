@@ -141,6 +141,14 @@ if not all([airportSelect, pickup]):
     st.stop()
 
 @st.cache
+def get_iata_codes():
+    '''get iata codes'''
+    iata = pd.read_csv(join(CWD, '../data/iata.airport.codes.tsv'), sep='\t')
+    return iata
+
+iata = get_iata_codes()
+
+@st.cache
 def get_flights(date=None, airport='JFK'):
     'get flights for a given date or today if None'
     if date is None:
@@ -149,7 +157,6 @@ def get_flights(date=None, airport='JFK'):
     result = urllib.request.urlopen(qstring)
     flights = json.loads(result.read().decode('utf-8'))
     return flights
-
 
 flights = get_flights(date, airport)
 
@@ -210,6 +217,11 @@ flightNum = c1.selectbox('Flight number', flistX)
 if not flightNum:
     st.stop()
 
+# get destination for selected flightNum
+dest = ddf[ddf['flight'] == flightNum]['destination'].iloc[0]
+# get country from iata for dest
+country = iata[iata['iata_code'] == dest]['country'].iloc[0]
+
 # delay section
 d1, d2 = st.columns([2, 3])
 d1.write(' ')
@@ -243,8 +255,11 @@ d1.code('Departure Time: %s' % departure)
 
 # convert detaprture to datetime
 departure = datetime.datetime.strptime(departure, '%H:%M')
-# subtract 45 mins from departure time
-checkin = departure - datetime.timedelta(minutes=45)
+# 45 mins for domestic or 120 for international
+depmins = 45
+if country != 'USA':
+    depmins = 120
+checkin = departure - datetime.timedelta(minutes=depmins)
 d1.write('**When do I need to leave to check-in on time?**')
 d1.code('Checkin Time: %s' % (checkin.strftime('%H:%M')))
 
