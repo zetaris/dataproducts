@@ -126,7 +126,7 @@ form = c1.form(key='main-form')
 # today date as YYYY-MM-DD
 today = datetime.datetime.today()
 one_week = pd.to_datetime('today') + pd.Timedelta(days=8)
-date = form.date_input('Travel date', min_value=one_week, value=one_week) #, on_change=dateChange)
+date = form.date_input('Travel Date', min_value=one_week, value=one_week) #, on_change=dateChange)
 airport_list = ['', 'John F. Kennedy (JFK)', 'La Guardia (LGA)', 'Newark (EWR)']
 # airport selection from dropdown menu
 pickup = form.selectbox('Pickup Zone', puzones, index=0)
@@ -213,7 +213,7 @@ flist = flist.sort_values(by=['departure'], ascending=False)
 flistX = ['']
 flistX.extend(flist['flight'])
 
-flightNum = c1.selectbox('Flight number', flistX)
+flightNum = c1.selectbox('Flight Number', flistX)
 if not flightNum:
     st.stop()
 
