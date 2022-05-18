@@ -272,6 +272,8 @@ delay = [5.88744589, 5.11280239, 5.2020454 ,  6.03790087,  6.64281398,
        12.63465126, 11.93111295, 13.74051771, 16.67041873]
 
 # subset
+# FIXME
+depHour = max(depHour, 3)
 xvals = hours[depHour-3:depHour+1]
 yvals = delay[depHour-3:depHour+1]
 seed = int(str(date).replace('-', '')) + int(str(hash(airport))[:6]) + int(str(hash(pickup))[:6])
