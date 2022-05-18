@@ -113,18 +113,32 @@ def dateChange():
     # set airportSelect to index 0
     st.session_state.airport_selector = airport_list[0]
 
+# pickup zones
+pudo = pd.read_csv(join(CWD, '../data/airport_hour_delay_percentage.tsv'), sep='\t')
+puzones = ['']
+puzones.extend(pudo.zone_pickup.unique())
+dozones = pudo.zone_dropoff.unique()
+
+# main form
+form = c1.form(key='main-form')
+
 # date selector
 # today date as YYYY-MM-DD
 today = datetime.datetime.today()
 one_week = pd.to_datetime('today') + pd.Timedelta(days=8)
-date = c1.date_input('Travel date', min_value=one_week, value=one_week, on_change=dateChange)
+date = form.date_input('Travel date', min_value=one_week, value=one_week) #, on_change=dateChange)
 airport_list = ['', 'John F. Kennedy (JFK)', 'La Guardia (LGA)', 'Newark (EWR)']
 # airport selection from dropdown menu
-airportSelect = c1.selectbox('Airport', airport_list, disabled=st.session_state['airportsFlag'], key='airport_selector')
-if airportSelect == '':
-    # stop if airport not selected
-    st.stop()
+pickup = form.selectbox('Pickup Zone', puzones, index=0)
+#airportSelect = form.selectbox('Airport', airport_list, disabled=st.session_state['airportsFlag'], key='airport_selector')
+airportSelect = form.selectbox('Airport', airport_list, key='airport_selector', index=0)
+
 airport = airportSelect[-4:-1]
+submit = form.form_submit_button('Submit')
+
+# stop if airport not selected
+if not all([airportSelect, pickup]):
+    st.stop()
 
 @st.cache
 def get_flights(date=None, airport='JFK'):
@@ -177,13 +191,8 @@ ddf['arrival'] = df['arrival'].apply(lambda x: x['scheduledTime'])
 
 # flights dataframe display
 c2.markdown(hide_dataframe_row_index, unsafe_allow_html=True)
-c2.dataframe(ddf)
+c2.dataframe(ddf, height=480)
 
-# delay section
-d1, d2 = st.columns([2, 3])
-d1.write(' ')
-d1.write(' ')
-d1.write('**Flight Details**')
 
 # extract flight number and departure time from flights
 #flist = [(f.get('flight').get('iataNumber'), f.get('departure').get('scheduledTime')) for f in flights]
@@ -194,10 +203,19 @@ flist['flight'] = flist['flight'].apply(lambda x: x.upper())
 flist = flist.append(pd.Series(['', ''], index=flist.columns), ignore_index=True)
 # sort flist by departure time
 flist = flist.sort_values(by=['departure'], ascending=False)
+flistX = ['']
+flistX.extend(flist['flight'])
 
-flightNum = c1.selectbox('Flight number', flist['flight'])
-if flightNum == '':
+flightNum = c1.selectbox('Flight number', flistX)
+if not flightNum:
     st.stop()
+
+# delay section
+d1, d2 = st.columns([2, 3])
+d1.write(' ')
+d1.write(' ')
+d1.write('**Flight Details**')
+
 d1.code('Flight Number: %s' % flightNum)
 # get flight details from flights
 flight = [f for f in flights if f['flight']['iataNumber'].upper() == flightNum]
@@ -241,7 +259,7 @@ delay = [5.88744589, 5.11280239, 5.2020454 ,  6.03790087,  6.64281398,
 # subset
 xvals = hours[depHour-3:depHour+1]
 yvals = delay[depHour-3:depHour+1]
-seed = int(str(date).replace('-', '')) + int(str(hash(airport))[:6])
+seed = int(str(date).replace('-', '')) + int(str(hash(airport))[:6]) + int(str(hash(pickup))[:6])
 np.random.seed(seed)
 # create hrs delay dataframe using hours and delay
 hrs = pd.DataFrame({'delay':yvals}, index=range(depHour-3,depHour+1))
