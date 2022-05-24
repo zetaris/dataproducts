@@ -307,8 +307,9 @@ model = xgb.Booster()
 model.load_model(join(CWD, '../models/xgboost.model.json'))
 # calculate distance for selected pickup zone and airport
 distance = get_distance_model()
-# get distance
-dist = distance[(distance['zone_pickup'] == pickup) & (distance['zone_dropoff'] == airport)]['trip_distance'].iloc[0]
+# FIXME: get distance
+dist = distance[(distance['zone_pickup'] == pickup) & (distance['zone_dropoff'] == airport)]['trip_distance']
+dist = 10 if dist.empty else dist.iloc[0]
 # get weather for selected day month hour
 weather = get_weather_model()
 # get weather
@@ -317,11 +318,12 @@ w = weather[(weather['day'] == date.day) & (weather['month'] == date.month) & (w
 
 # predicted travel time from pickup_zone to airport
 temp, precip, snow, visibility, month, day, hour = w.iloc[0]
-#duration = abs(376.54959710535195 + (dist['trip_distance'].iloc[0] * 104.04101449) + (hour * 23.78409867) + (temp * 2.12115341) + (precip * 7.19835818) + (snow * 71.8724414) + (visibility * -0.42866862))
+# regression model
+duration = abs(376.54959710535195 + (dist * 104.04101449) + (hour * 23.78409867) + (temp * 2.12115341) + (precip * 7.19835818) + (snow * 71.8724414) + (visibility * -0.42866862))
 
 # feature_names: ['trip_distance', 'hour', 'temp', 'precip', 'snow', 'visibility']
 y = pd.DataFrame({'trip_distance':dist, 'hour':hour, 'temp':temp, 'precip':precip, 'snow':snow, 'visibility':visibility}, index=[0])
-duration = float(model.predict(y)[0])
+#duration = float(model.predict(y)[0])
 #st.write(duration, ' ---> ', '%02d:%02d' % (int(duration/60), int(duration%60)))
 
 
