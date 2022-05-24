@@ -301,7 +301,10 @@ hrs['delay'] = hrs['delay'] + np.abs(np.random.normal(0, 10, len(hrs)))
 hrs['delay'] = np.minimum(hrs['delay'], 95)
 
 # get duration model
-model = pickle.load(open(join(CWD, '../models/xgboost.model.pkl'), 'rb'))
+# load xgboost json model
+
+model = xgb.Booster() 
+model.load_model(join(CWD, '../models/xgboost.model.json'))
 # calculate distance for selected pickup zone and airport
 distance = get_distance_model()
 # get distance
