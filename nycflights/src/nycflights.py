@@ -8,6 +8,7 @@ import altair as alt
 import plotly.graph_objects as go
 import json, random, urllib 
 from os.path import dirname, join
+import xgboost as xgb
 
 
 # wide page layout
