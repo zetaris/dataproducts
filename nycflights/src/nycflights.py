@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import pickle
 import jaydebeapi
 import datetime
 import altair as alt
@@ -165,8 +166,19 @@ flights = get_flights(date, airport)
 df = pd.DataFrame(flights)
 # drop weekday
 df = df.drop(columns=['weekday'])
-####
-#st.write(df.head(1))
+
+@st.cache
+def get_weather_model():
+    '''get weather forecast model'''
+    weather_model = pd.read_csv(join(CWD, '../data/model.weather.tsv'), sep='\t')
+    return weather_model
+
+@st.cache
+def get_distance_model():
+    '''get distance model'''
+    distance_model = pd.read_csv(join(CWD, '../data/model.distance.tsv'), sep='\t')
+    return distance_model
+
 
 # extract values
 ddf = pd.DataFrame()
@@ -287,31 +299,47 @@ hrs['delay'] = hrs['delay'] + np.abs(np.random.normal(0, 10, len(hrs)))
 # set upper bound to 95
 hrs['delay'] = np.minimum(hrs['delay'], 95)
 
-# calculate travel time
-# get depHour delay value from hrs
-depDelay = hrs.loc[depHour].get('delay')
-#depDelay = hrs[depHour].delay
-travelTime = (1 + depDelay / 100) * 60
+# get duration model
+model = pickle.load(open(join(CWD, '../models/xgboost.model.pkl'), 'rb'))
+# calculate distance for selected pickup zone and airport
+distance = get_distance_model()
+# get distance
+dist = distance[(distance['zone_pickup'] == pickup) & (distance['zone_dropoff'] == airport)]['trip_distance'].iloc[0]
+# get weather for selected day month hour
+weather = get_weather_model()
+# get weather
+w = weather[(weather['day'] == date.day) & (weather['month'] == date.month) & (weather['hour'] == depHour)]
+
+
+# predicted travel time from pickup_zone to airport
+temp, precip, snow, visibility, month, day, hour = w.iloc[0]
+#duration = abs(376.54959710535195 + (dist['trip_distance'].iloc[0] * 104.04101449) + (hour * 23.78409867) + (temp * 2.12115341) + (precip * 7.19835818) + (snow * 71.8724414) + (visibility * -0.42866862))
+
+# feature_names: ['trip_distance', 'hour', 'temp', 'precip', 'snow', 'visibility']
+y = pd.DataFrame({'trip_distance':dist, 'hour':hour, 'temp':temp, 'precip':precip, 'snow':snow, 'visibility':visibility}, index=[0])
+duration = float(model.predict(y)[0])
+#st.write(duration, ' ---> ', '%02d:%02d' % (int(duration/60), int(duration%60)))
+
+
 # convert travel time to hours and minutes
-travelTime = datetime.timedelta(minutes=travelTime)
+travelTime = datetime.timedelta(seconds=duration)
 # write travel time as hours and minutes
 #d1.write('**Travel Time**')
-d1.code('Estimated Travel Time: %s hr %s mins' % (travelTime.seconds // 3600, (travelTime.seconds // 60) % 60))
+if duration < 3600:
+    d1.code('Estimated Travel Time: %s mins' % (int(duration/60)))
+else:
+    d1.code('Estimated Travel Time: %s hr %s mins' % (travelTime.seconds // 3600, (travelTime.seconds // 60) % 60))
 # subtract travelTime fom checkin time
 leaveTime = checkin - travelTime
 # write leave time
 d1.code('Recommended Leave Time: %s' % leaveTime.strftime('%H:%M'))
 
-# plot hourly probability of delay
-#fig, ax = plt.subplots()
-#ax.plot(hours, delay, 'r-')
-#ax.set_xlabel('Hour')
-#ax.set_ylabel('Probability of delay')
-#ax.set_title('Hourly probability of delay')
-#st.pyplot(fig)
-
-# bar chart hourly probability of delay without legend
-#st.bar_chart(delay_df, use_container_width=True)
+# st.write(' ')
+# ex1 = d1.expander('Model Data')
+# ex1.subheader('Distance')
+# ex1.write(dist)
+# ex1.subheader('Weather Forecast')
+# ex1.write(w)
 
 fig = go.Figure()
 # multiple yvals by 0.1
