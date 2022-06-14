@@ -128,9 +128,13 @@ form = c1.form(key='main-form')
 
 # date selector
 # today date as YYYY-MM-DD
-today = datetime.datetime.today()
+today = pd.to_datetime('today') + pd.Timedelta(days=1)
 one_week = pd.to_datetime('today') + pd.Timedelta(days=8)
-date = form.date_input('Travel Date', min_value=one_week, value=one_week) #, on_change=dateChange)
+#date = form.date_input('Travel Date', min_value=one_week, value=one_week) #, on_change=dateChange)
+date = form.date_input('Travel Date', min_value=today, value=today)
+# if date is within one week, add one week to date
+if date < one_week:
+    date = date + pd.Timedelta(days=7)
 airport_list = ['', 'John F. Kennedy (JFK)', 'La Guardia (LGA)', 'Newark (EWR)']
 # airport selection from dropdown menu
 pickup = form.selectbox('Pickup Zone', puzones, index=0)
@@ -220,7 +224,7 @@ c2.dataframe(ddf, height=480)
 #flist = [(f.get('flight').get('iataNumber'), f.get('departure').get('scheduledTime')) for f in flights]
 flist = ddf[['flight', 'departure']]
 # uppercase flight number
-flist['flight'] = flist['flight'].apply(lambda x: x.upper())
+flist.loc[:, 'flight'] = flist['flight'].apply(lambda x: x.upper())
 # insert empty row
 flist = flist.append(pd.Series(['', ''], index=flist.columns), ignore_index=True)
 # sort flist by departure time
@@ -302,9 +306,8 @@ hrs['delay'] = np.minimum(hrs['delay'], 95)
 
 # get duration model
 # load xgboost json model
-
-model = xgb.Booster() 
-model.load_model(join(CWD, '../models/xgboost.model.json'))
+#model = xgb.Booster()
+#model.load_model(join(CWD, '../models/xgboost.model.json'))
 # calculate distance for selected pickup zone and airport
 distance = get_distance_model()
 # FIXME: get distance
@@ -321,14 +324,16 @@ temp, precip, snow, visibility, month, day, hour = w.iloc[0]
 # regression model
 duration = abs(376.54959710535195 + (dist * 104.04101449) + (hour * 23.78409867) + (temp * 2.12115341) + (precip * 7.19835818) + (snow * 71.8724414) + (visibility * -0.42866862))
 
+# duration model inference
 # feature_names: ['trip_distance', 'hour', 'temp', 'precip', 'snow', 'visibility']
-y = pd.DataFrame({'trip_distance':dist, 'hour':hour, 'temp':temp, 'precip':precip, 'snow':snow, 'visibility':visibility}, index=[0])
-#duration = float(model.predict(y)[0])
+#y = pd.DataFrame({'trip_distance':dist, 'hour':hour, 'temp':temp, 'precip':precip, 'snow':snow, 'visibility':visibility}, index=[0])
+# predict duration
+#duration = model.predict(xgb.DMatrix(y))[0]
 #st.write(duration, ' ---> ', '%02d:%02d' % (int(duration/60), int(duration%60)))
 
 
 # convert travel time to hours and minutes
-travelTime = datetime.timedelta(seconds=duration)
+travelTime = datetime.timedelta(seconds=float(duration))
 # write travel time as hours and minutes
 #d1.write('**Travel Time**')
 if duration < 3600:
